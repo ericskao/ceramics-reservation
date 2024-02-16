@@ -1,4 +1,5 @@
 "use client";
+import useDebounce from "@/hooks/useDebounce";
 import { GiphyFetch } from "@giphy/js-fetch-api";
 import * as Form from "@radix-ui/react-form";
 import Image from "next/image";
@@ -19,15 +20,15 @@ const EventForm = () => {
   const [eventLocation, setEventLocation] = useState<string>("");
   const [gif, setGif] = useState<string | null>(null);
 
+  const debouncedSearch = useDebounce(eventName, 1000);
+
   useEffect(() => {
     const randomNum = Math.floor(Math.random() * 11);
     const gf = new GiphyFetch("OfXdtsVnL0PmyfUlR5KgAlIdaApkGkxM");
-    gf.trending({ offset: 0, limit: 10 }).then((res) => {
-      if (!gif) {
-        setGif(res.data[randomNum]?.images.downsized.url);
-      }
+    gf.search(debouncedSearch, { offset: 0, limit: 10 }).then((res) => {
+      setGif(res.data[randomNum]?.images.downsized.url);
     });
-  }, [gif]);
+  }, [gif, debouncedSearch]);
 
   const onFormSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
