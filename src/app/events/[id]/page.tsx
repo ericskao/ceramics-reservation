@@ -1,6 +1,8 @@
 "use client";
 
 import ConfirmedDatesList from "@/components/features/ConfirmedDatesList";
+import Header from "@/components/shared/Header";
+import { Button } from "@/components/ui/button";
 import { useEvent } from "@/hooks/useEvent";
 import Image from "next/image";
 
@@ -24,19 +26,30 @@ export default function Event({ params }: { params: { id: string } }) {
         .catch((error) => {
           console.error("Error sharing:", error);
         });
+    } else {
+      alert(
+        "This is the web browser publish callback, we will use our custom share UI",
+      );
     }
   };
 
-  return data ? (
-    <div>
-      {data.name}
-      {data.description}
-      {data.img && <Image src={data.img} alt="gif" width={480} height={290} />}
-      {data.availableTimes && (
-        <ConfirmedDatesList confirmedTimes={data.availableTimes} />
-      )}
-      <button onClick={onInviteClick}>Invite</button>
-      {/* {isLoading ? (
+  return (
+    <>
+      <Header />
+      <div className="flex flex-col">
+        <div>{data.name}</div>
+        <div>{data.description}</div>
+        <div>
+          {data.img && (
+            <Image src={data.img} alt="gif" width={480} height={290} />
+          )}
+        </div>
+        {data.availableTimes && (
+          <ConfirmedDatesList confirmedTimes={data.availableTimes} />
+        )}
+        If event is published state, this button will not appear
+        <Button onClick={onInviteClick}>Publish Event</Button>
+        {/* {isLoading ? (
         <h2>Loading...</h2>
       ) : (
         <div>
@@ -44,8 +57,7 @@ export default function Event({ params }: { params: { id: string } }) {
           <Heading as="h3">{eventAttributes?.description}</Heading>
         </div>
       )} */}
-    </div>
-  ) : (
-    <div>{params.id}</div>
+      </div>
+    </>
   );
 }

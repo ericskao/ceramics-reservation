@@ -63,17 +63,6 @@ const EventForm = () => {
           />
         </Form.Control>
       </Form.Field>
-      <Form.Field name="event-location">
-        <Form.Control asChild>
-          <Input
-            id="event-location"
-            inputType="text"
-            labelText="Location"
-            value={eventLocation}
-            onInputChange={(e) => setEventLocation(e.target.value)}
-          />
-        </Form.Control>
-      </Form.Field>
       <Form.Field name="description">
         <Form.Control asChild>
           <Input
@@ -85,10 +74,20 @@ const EventForm = () => {
           />
         </Form.Control>
       </Form.Field>
-
-      <Form.Field name="numAttendees">
+      <Form.Field name="event-location">
         <Form.Control asChild>
-          {gif && <Image src={gif} alt="gif" width={480} height={290} />}
+          <Input
+            id="event-location"
+            inputType="text"
+            labelText="Location"
+            value={eventLocation}
+            onInputChange={(e) => setEventLocation(e.target.value)}
+          />
+        </Form.Control>
+      </Form.Field>
+      <Form.Field name="giphy">
+        <Form.Control asChild>
+          {gif && <Image src={gif} alt="gif" width={200} height={100} />}
         </Form.Control>
       </Form.Field>
       <Form.Field name="eventDate" className="flex flex-col relative">
@@ -115,7 +114,7 @@ const EventForm = () => {
       </Form.Field>
       <Form.Submit asChild>
         <Button disabled={!eventName} className="mt-auto">
-          Publish Event
+          Save Draft
         </Button>
       </Form.Submit>
     </Form.Root>

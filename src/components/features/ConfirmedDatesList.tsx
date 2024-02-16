@@ -23,7 +23,7 @@ const ConfirmedDatesList = ({
   const sortedDates = Object.keys(chunkedDates).sort(compareAsc);
 
   return (
-    <div className="shadow-inner-secondary rounded-lg p-3 min-h-64 max-h-96 overflow-y-scroll">
+    <div className="shadow-inner-secondary rounded-lg p-3 min-h-52 max-h-96 overflow-y-scroll">
       <ul className="flex flex-col gap-y-4">
         {sortedDates.map((date) => {
           return (
