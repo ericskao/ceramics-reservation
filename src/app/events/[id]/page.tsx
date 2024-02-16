@@ -15,7 +15,7 @@ export default function Event({ params }: { params: { id: string } }) {
       navigator
         .share({
           title: data.name,
-          text: data.description,
+          text: data.description || "Come join this event!",
           url: "https://calevent-4ylwmidyp-ericskao.vercel.app/events/13",
         })
         .then(() => {
