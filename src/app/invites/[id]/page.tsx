@@ -1,9 +1,13 @@
 "use client";
 
+import CalendarDatePicker from "@/components/features/CalendarDatePicker";
+import IndeterminateCheckbox from "@/components/features/invites/IndeterminateCheckbox";
 import Header from "@/components/shared/Header";
 import { Button } from "@/components/ui/button";
+import Dialog from "@/components/ui/dialog";
 import Heading from "@/components/ui/heading";
 import { format } from "date-fns";
+import { useState } from "react";
 
 // name, description, numAttendees, availableTimes (ConfirmedTimeType[])
 
@@ -14,27 +18,35 @@ const mockData = {
   numAttendees: null,
   availableTimes: [
     {
-      date: "2024-02-27T08:00:00.000Z",
-      startTime: "2024-02-27T16:30:00.000Z",
-      endTime: "2024-02-27T18:00:00.000Z",
+      date: new Date("2024-02-27T08:00:00.000Z"),
+      startTime: new Date("2024-02-27T16:30:00.000Z"),
+      endTime: new Date("2024-02-27T18:00:00.000Z"),
+      id: 1,
     },
     {
-      date: "2024-02-27T08:00:00.000Z",
-      startTime: "2024-02-27T17:30:00.000Z",
+      date: new Date("2024-02-27T08:00:00.000Z"),
+      startTime: new Date("2024-02-27T17:30:00.000Z"),
       endTime: null,
+      id: 2,
     },
     {
-      date: "2024-03-01T08:00:00.000Z",
-      startTime: "2024-03-01T08:00:00.000Z",
+      date: new Date("2024-03-01T08:00:00.000Z"),
+      startTime: new Date("2024-03-01T08:00:00.000Z"),
       endTime: null,
+      id: 3,
     },
   ],
 };
 
+const savedAvailability: { [timeId: number]: boolean | "indeterminate" } = {};
+
 export default function Invite({ params }: { params: { id: string } }) {
+  const [inviteTimeResponses, setInviteTimeResponses] = useState<{
+    [key: number]: boolean | "indeterminate";
+  }>({});
+
   return (
-    <div>
-      {/* {params.id} */}
+    <div className="w-full">
       <Header />
       <section>
         <div className="pt-6 px-4">
@@ -45,26 +57,52 @@ export default function Invite({ params }: { params: { id: string } }) {
           <div>
             Which date and times are you able to attend
             <br /> <span className="font-semibold">{mockData.name}</span>
-            {mockData.location && (
-              <span className="text-gray-600"> at {mockData.location}</span>
-            )}
-            ?
+            {mockData.location && <span> at {mockData.location}</span>}?
           </div>
           <ul className="p-3 flex flex-col gap-y-3">
-            {mockData.availableTimes.map((time, index) => (
-              <li key={index} className="flex">
-                <button>radio button here</button>
-                <div className="flex flex-col">
-                  <span>{format(time.date, "PPPP")}</span>
-                  <span>
-                    {format(time.startTime, "p")}{" "}
-                    {time.endTime && ` to ${format(time.endTime, "p")}`}
-                  </span>
-                </div>
-              </li>
-            ))}
+            {mockData.availableTimes.map((time, index) => {
+              // we should check local state for user recorded updates before defaulting to checking data from query for that particular timeId
+              const checkedState = inviteTimeResponses.hasOwnProperty(time.id)
+                ? inviteTimeResponses[time.id]
+                : savedAvailability[time.id];
+              return (
+                <li key={index} className="flex gap-x-2">
+                  <IndeterminateCheckbox
+                    checkedState={checkedState}
+                    setCheckedState={(newState) => {
+                      const newAvailability = { ...inviteTimeResponses };
+                      newAvailability[time.id] = newState;
+                      setInviteTimeResponses(newAvailability);
+                    }}
+                  />
+                  <div className="flex flex-col">
+                    <span>{format(time.date, "PPPP")}</span>
+                    <span>
+                      {format(time.startTime, "p")}{" "}
+                      {time.endTime && ` to ${format(time.endTime, "p")}`}
+                    </span>
+                  </div>
+                </li>
+              );
+            })}
           </ul>
-          <Button variant="secondary">Add more times</Button>
+          <Dialog
+            classNames={{
+              content: "bottom-0 w-full h-5/6 rounded-t-3xl",
+            }}
+            trigger={
+              <div>
+                <Button variant="secondary">Add more times</Button>
+              </div>
+            }
+          >
+            <CalendarDatePicker
+              confirmedTimes={mockData.availableTimes}
+              setConfirmedTimes={() => {
+                console.log("setting time");
+              }}
+            />
+          </Dialog>
         </div>
       </section>
     </div>

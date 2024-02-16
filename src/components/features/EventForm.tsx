@@ -20,7 +20,6 @@ const EventForm = () => {
 
   const onFormSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
     const localEvents = localStorage.getItem("savedEvents");
     const payload = {
       name: eventName,
