@@ -2,7 +2,32 @@ import { ApiProvider } from "@/components/ApiProvider";
 import { ThemeProvider } from "@/components/theme-provider";
 import { ModeToggle } from "@/components/ui/mode-toggle";
 import { cn } from "@/lib/utils";
+import { Metadata } from "next";
 import "./globals.css";
+
+export const metadata: Metadata = {
+  openGraph: {
+    title: "CorgiCal",
+    description: "CorgiCal events",
+    url: "https://nextjs.org",
+    siteName: "",
+    images: [
+      {
+        url: "https://media0.giphy.com/media/v1.Y2lkPTc5MGI3NjExbnNxZTVja3I4ZGE2cHQydHkzamR3bDJ3YWhmaDB1eDBncXc2Zm9maCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/geDdVatJFD2H4CkqAj/giphy.gif",
+        width: 800,
+        height: 600,
+      },
+      {
+        url: "https://media0.giphy.com/media/v1.Y2lkPTc5MGI3NjExbnNxZTVja3I4ZGE2cHQydHkzamR3bDJ3YWhmaDB1eDBncXc2Zm9maCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/geDdVatJFD2H4CkqAj/giphy.gif",
+        width: 1800,
+        height: 1600,
+        alt: "My custom alt",
+      },
+    ],
+    locale: "en_US",
+    type: "website",
+  },
+};
 
 export default function RootLayout({
   children,

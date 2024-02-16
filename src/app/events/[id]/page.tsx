@@ -16,7 +16,7 @@ export default function Event({ params }: { params: { id: string } }) {
         .share({
           title: data.name,
           text: data.description,
-          url: "https://example.com",
+          url: "https://calevent-4ylwmidyp-ericskao.vercel.app/events/13",
         })
         .then(() => {
           console.log("Shared successfully");
