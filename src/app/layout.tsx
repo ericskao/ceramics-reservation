@@ -1,15 +1,8 @@
-import { ThemeProvider } from "@/components/theme-provider";
-import { cn } from "@/lib/utils";
-import { Inter as FontSans } from "next/font/google";
-import "./globals.css";
-// import { ModeToggle } from "@/components/ui/mode-toggle";
 import { ApiProvider } from "@/components/ApiProvider";
+import { ThemeProvider } from "@/components/theme-provider";
 import { ModeToggle } from "@/components/ui/mode-toggle";
-
-export const fontSans = FontSans({
-  subsets: ["latin"],
-  variable: "--font-sans",
-});
+import { cn } from "@/lib/utils";
+import "./globals.css";
 
 export default function RootLayout({
   children,
@@ -21,7 +14,6 @@ export default function RootLayout({
       <body
         className={cn(
           "min-h-screen bg-background font-sans antialiased flex-col flex",
-          fontSans.variable,
         )}
       >
         <ThemeProvider
