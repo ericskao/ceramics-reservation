@@ -2,6 +2,7 @@
 
 import ConfirmedDatesList from "@/components/features/ConfirmedDatesList";
 import { useEvent } from "@/hooks/useEvent";
+import Image from "next/image";
 
 export default function Event({ params }: { params: { id: string } }) {
   // const { data, isLoading } = useEvent(params.id);
@@ -10,13 +11,11 @@ export default function Event({ params }: { params: { id: string } }) {
   console.log("data", data);
 
   const onInviteClick = () => {
-    console.log("navigator", navigator);
     if (navigator.share) {
-      console.log("sharing");
       navigator
         .share({
-          title: "Title of the shared item",
-          text: "Description of the shared item",
+          title: data.name,
+          text: data.description,
           url: "https://example.com",
         })
         .then(() => {
@@ -32,7 +31,7 @@ export default function Event({ params }: { params: { id: string } }) {
     <div>
       {data.name}
       {data.description}
-      {data.numAttendees}
+      {data.img && <Image src={data.img} alt="gif" width={480} height={290} />}
       {data.availableTimes && (
         <ConfirmedDatesList confirmedTimes={data.availableTimes} />
       )}

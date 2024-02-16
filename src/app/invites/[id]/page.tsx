@@ -9,13 +9,12 @@ import Heading from "@/components/ui/heading";
 import { format } from "date-fns";
 import { useState } from "react";
 
-// name, description, numAttendees, availableTimes (ConfirmedTimeType[])
+// name, description, availableTimes (ConfirmedTimeType[])
 
 const mockData = {
   name: "Soju Night",
   description: "Chamisul Fresh only",
   location: "Pocha K",
-  numAttendees: null,
   availableTimes: [
     {
       date: new Date("2024-02-27T08:00:00.000Z"),

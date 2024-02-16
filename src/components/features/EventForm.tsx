@@ -1,8 +1,9 @@
 "use client";
-
+import { GiphyFetch } from "@giphy/js-fetch-api";
 import * as Form from "@radix-ui/react-form";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { FormEvent, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
 import { Button } from "../ui/button";
 import Dialog from "../ui/dialog";
 import { Input } from "../ui/input";
@@ -16,7 +17,17 @@ const EventForm = () => {
   const [eventName, setEventName] = useState<string>("");
   const [eventDescription, setEventDescription] = useState<string>("");
   const [eventLocation, setEventLocation] = useState<string>("");
-  const [numAttendees, setNumAttendees] = useState<number | null>(null);
+  const [gif, setGif] = useState<string | null>(null);
+
+  useEffect(() => {
+    const randomNum = Math.floor(Math.random() * 11);
+    const gf = new GiphyFetch("OfXdtsVnL0PmyfUlR5KgAlIdaApkGkxM");
+    gf.trending({ offset: 0, limit: 10 }).then((res) => {
+      if (!gif) {
+        setGif(res.data[randomNum]?.images.downsized.url);
+      }
+    });
+  }, [gif]);
 
   const onFormSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -25,8 +36,8 @@ const EventForm = () => {
       name: eventName,
       description: eventDescription,
       location: eventLocation,
-      numAttendees: numAttendees,
       availableTimes: confirmedTimes,
+      img: gif,
     };
     const savedEvents = localEvents ? JSON.parse(localEvents) : [];
     const id = savedEvents.length + 1;
@@ -73,15 +84,10 @@ const EventForm = () => {
           />
         </Form.Control>
       </Form.Field>
+
       <Form.Field name="numAttendees">
         <Form.Control asChild>
-          <Input
-            id="event-attendees"
-            inputType="number"
-            labelText="Number of Attendees"
-            value={numAttendees?.toString() || ""}
-            onInputChange={(e) => setNumAttendees(parseInt(e.target.value))}
-          />
+          {gif && <Image src={gif} alt="gif" width={480} height={290} />}
         </Form.Control>
       </Form.Field>
       <Form.Field name="eventDate" className="flex flex-col relative">
