@@ -1,4 +1,5 @@
 "use client";
+
 import useDebounce from "@/hooks/useDebounce";
 import { GiphyFetch } from "@giphy/js-fetch-api";
 import * as Form from "@radix-ui/react-form";
@@ -24,6 +25,7 @@ const EventForm = () => {
 
   useEffect(() => {
     const randomNum = Math.floor(Math.random() * 11);
+    // future use these images and allow user to select
     const gf = new GiphyFetch("OfXdtsVnL0PmyfUlR5KgAlIdaApkGkxM");
     gf.search(debouncedSearch, { offset: 0, limit: 10 }).then((res) => {
       setGif(res.data[randomNum]?.images.downsized.url);
