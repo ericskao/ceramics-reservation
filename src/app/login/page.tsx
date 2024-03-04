@@ -14,6 +14,7 @@ import PhoneInput, { CountryData } from "react-phone-input-2";
 import "react-phone-input-2/lib/style.css";
 
 export default function Home() {
+  console.log("chang");
   const [value, setValue] = useState<string | undefined>();
   const [selectedCountry, setSelectedCountry] = useState<CountryData>();
   const [verificationCode, setVerificationCode] = useState<
