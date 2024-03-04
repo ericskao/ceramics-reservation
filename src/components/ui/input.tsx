@@ -2,36 +2,47 @@
 
 import { cn } from "@/lib/utils";
 import * as RadixLabel from "@radix-ui/react-label";
-import { ChangeEventHandler } from "react";
+import { ChangeEventHandler, KeyboardEventHandler } from "react";
 
 const Input = ({
   id,
   defaultValue,
   labelText,
   inputPlaceholder,
-  children,
+  className,
   autoFocus,
   inputType = "text",
   inputRequired,
+  maxLength,
   value,
   onInputChange,
+  onKeyDown,
 }: {
   autoFocus?: boolean;
   labelText?: string;
+  className?: { root?: string; input?: string };
   id?: string;
   defaultValue?: string;
   inputPlaceholder?: string;
   children?: React.ReactNode;
   inputType?: "text" | "textarea" | "number";
   inputRequired?: boolean;
+  maxLength?: number;
   value?: string | number;
+  onKeyDown?: KeyboardEventHandler<HTMLInputElement>;
   onInputChange?: ChangeEventHandler<HTMLInputElement | HTMLTextAreaElement>;
 }) => {
   return (
-    <div className="shadow-inner-secondary flex flex-col-reverse rounded-lg px-3 py-2 focus-within:shadow-inner-focused">
+    <div
+      className={cn(
+        "shadow-inner-secondary flex flex-col-reverse rounded-lg px-3 py-2 focus-within:shadow-inner-focused",
+        className?.root,
+      )}
+    >
       {(inputType === "text" || inputType === "number") && (
         <input
-          className="outline-none peer"
+          maxLength={maxLength}
+          className={cn("outline-none peer", className?.input)}
           id={id}
           autoFocus={autoFocus}
           type={inputType}
@@ -39,13 +50,14 @@ const Input = ({
           placeholder={inputPlaceholder}
           required={inputRequired}
           onChange={onInputChange}
+          onKeyDown={onKeyDown}
           value={value}
         />
       )}
       {inputType === "textarea" && (
         <textarea
           onChange={onInputChange}
-          className="outline-none peer"
+          className={cn("outline-none peer", className?.input)}
           id={id}
         />
       )}
