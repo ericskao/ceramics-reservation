@@ -1,0 +1,28 @@
+= form_with url: :login, method: :post do |f|
+  .field.is-horizontal
+    .field-label.is-normal
+      label.label First Name
+    .field-body
+      .field
+        .control
+          = f.text_field :first_name, value: current_user&.first_name, class: 'input'
+  .field.is-horizontal
+    .field-label.is-normal
+      label.label Last Name
+    .field-body
+      .field
+        .control
+          = f.text_field :last_name, value: current_user&.last_name, class: 'input'
+  .field.is-horizontal
+    .field-label.is-normal
+      label.label Auth Code*
+    .field-body
+      .field
+        .control
+          = f.text_field :code, class: 'input', required: true
+  .field.is-horizontal
+    .field-label.is-normal
+    .field-body
+      .field.is-grouped
+        .control
+          button.button.is-link.is-large Verify Code

@@ -1,0 +1,32 @@
+.columns
+  .column.is-half
+    = form_with url: event_event_availabilities_path(@event), method: :post do |f|
+      .field.is-horizontal
+        .field-label.is-normal
+          label.label Date
+        .field-body
+          .field
+            .control
+              = f.date_field :date, min: Time.zone.today, class: 'input', required: true
+      .field.is-horizontal
+        .field-label.is-normal
+          label.label From
+        .field-body
+          .field
+            .control
+              .input= f.time_select :from, { minute_step: 15, ampm: true }, class: 'input', required: true
+      .field.is-horizontal
+        .field-label.is-normal
+          label.label To
+        .field-body
+          .field
+            .control
+              .input= f.time_select :to, { minute_step: 15, ampm: true }, class: 'input', required: true
+      .field.is-horizontal
+        .field-label.is-normal
+        .field-body
+          .field.is-grouped
+            .control
+              button.button.is-link.is-large Add
+            .control
+              = link_to 'Cancel', event_path(@event), class: 'button is-light is-large'

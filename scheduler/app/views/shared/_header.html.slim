@@ -1,0 +1,45 @@
+/! Main container
+nav.navbar.is-link aria-label=("main navigation") role="navigation"
+  /! Left side
+  .navbar-brand
+    .navbar-item
+      h1.title.navbar-home-link
+        = link_to 'CorgiCal', root_url
+
+    a.navbar-burger.burger.is-active aria-expanded="false" aria-label="menu" data-target="login-out" role="button"
+      span aria-hidden="true"
+      span aria-hidden="true"
+      span aria-hidden="true"
+  #login-out.navbar-menu.is-active
+    .navbar-start
+    .navbar-end
+      .navbar-item
+        .buttons
+          - if current_user.present? && !current_user.temp?
+            = link_to 'New Event', new_event_path, class: 'button is-success'
+            = link_to 'Log out', logout_path, data: {turbo_method: :delete }, class: 'button'
+          / - else
+          /   = button_to "Log in with Google", '/auth/google_oauth2', data: { "turbo": false } , class: 'button is-dark'
+
+javascript:
+  document.addEventListener('DOMContentLoaded', () => {
+
+    // Get all "navbar-burger" elements
+    const $navbarBurgers = Array.prototype.slice.call(document.querySelectorAll('.navbar-burger'), 0);
+
+    // Add a click event on each of them
+    $navbarBurgers.forEach( el => {
+      el.addEventListener('click', () => {
+
+        // Get the target from the "data-target" attribute
+        const target = el.dataset.target;
+        const $target = document.getElementById(target);
+
+        // Toggle the "is-active" class on both the "navbar-burger" and the "navbar-menu"
+        el.classList.toggle('is-active');
+        $target.classList.toggle('is-active');
+
+      });
+    });
+
+  });

@@ -1,0 +1,32 @@
+h1.is-size-1 #{@event.user.first_name.capitalize}'s #{@event.title} (#{@event.status(current_user)})
+
+.section
+  h3.title Description
+  .content
+    = @event.description.presence || 'No description'
+
+.section
+  h3.title.common-times Common times
+  - @event.common_times.each do |common_time, user_ids|
+    = render partial: 'common_time', 
+      locals: { common_time: common_time, user_ids: user_ids, user_ids_voted: @event.common_times_votes[common_time] || [] }
+
+.section
+  h3.title Availabilities 
+  - @availabilities_by_user.each do |user, availabilities|
+    .box
+      h4.is-size-4= user.authentications.last.email
+      .content
+        ul
+          - availabilities.each do |availability|
+            li
+              - if availability.from.to_date == availability.to.to_date
+                | #{time_string_no_date(availability.from)} - #{time_string(availability.to)}
+              - else
+                | #{time_string(availability.from)} - #{time_string(availability.to)}
+
+- unless @event.expired?(current_user)
+  .section
+    h3.title Add your availability
+
+    = render 'availability_form'

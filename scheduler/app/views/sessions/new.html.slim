@@ -1,0 +1,14 @@
+= form_with url: :send_auth_code, method: :post do |f|
+  .field.is-horizontal
+    .field-label.is-normal
+      label.label Phone Number*
+    .field-body
+      .field
+        .control
+          = f.telephone_field :phone_number, class: 'input', required: true
+  .field.is-horizontal
+    .field-label.is-normal
+    .field-body
+      .field.is-grouped
+        .control
+          button.button.is-link.is-large Send Code
