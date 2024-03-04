@@ -1,3 +1,6 @@
+// import { getEvent } from "@/lib/events";
+// import { useQuery } from "react-query";
+
 export function useEvent(id: string) {
   // using local storage
   if (typeof localStorage !== "undefined") {
