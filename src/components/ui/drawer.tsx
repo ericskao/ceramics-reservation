@@ -1,7 +1,7 @@
 import { cn } from "@/lib/utils";
 import * as RadixDialog from "@radix-ui/react-dialog";
 
-const Dialog = ({
+const Drawer = ({
   trigger,
   children,
   classNames,
@@ -19,7 +19,7 @@ const Dialog = ({
         <RadixDialog.Overlay className="bg-black/40 fixed inset-0 animate-overlay-show" />
         <RadixDialog.Content
           className={cn(
-            "bg-white rounded-lg fixed shadow animate-dialog-content-show overflow-y-auto top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2",
+            "bg-white rounded-lg fixed shadow animate-content-show overflow-y-auto",
             classNames?.content,
           )}
         >
@@ -30,4 +30,4 @@ const Dialog = ({
   );
 };
 
-export default Dialog;
+export default Drawer;

@@ -13,8 +13,13 @@ import { useState } from "react";
 
 const mockData = {
   name: "Soju Night",
+  eventId: 1,
   description: "Chamisul Fresh only",
   location: "Pocha K",
+  host: {
+    name: "Frank",
+    imgUrl: null,
+  },
   availableTimes: [
     {
       date: new Date("2024-02-27T08:00:00.000Z"),
@@ -48,8 +53,9 @@ export default function Invite({ params }: { params: { id: string } }) {
     <div className="w-full">
       <Header />
       <section>
-        <div className="pt-6 px-4">
+        <div className="flex flex-col pt-6 px-4 gap-y-2">
           <Heading as="h1">{mockData.name}</Heading>
+          <div className="text-sm">Hosted by {mockData.host.name}</div>
           {mockData.description && <div>{mockData.description}</div>}
         </div>
         <div className="py-6 px-4">

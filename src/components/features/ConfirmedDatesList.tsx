@@ -7,8 +7,10 @@ type ChunkedTimesType = {
 
 const ConfirmedDatesList = ({
   confirmedTimes = [],
+  userID,
 }: {
   confirmedTimes: ConfirmedTimeType[];
+  userID?: number;
 }) => {
   const chunkedDates = confirmedTimes.reduce((acc: ChunkedTimesType, curr) => {
     const isoDateString = formatISO(curr.date);
@@ -22,12 +24,14 @@ const ConfirmedDatesList = ({
 
   const sortedDates = Object.keys(chunkedDates).sort(compareAsc);
 
+  console.log("chunked", chunkedDates);
+  console.log("sortedDates", sortedDates);
   return (
     <div className="shadow-inner-secondary rounded-lg p-3 min-h-52 max-h-96 overflow-y-scroll">
       <ul className="flex flex-col gap-y-4">
-        {sortedDates.map((date) => {
+        {sortedDates.map((date, index) => {
           return (
-            <li key={date}>
+            <li key={index}>
               <span className="font-medium">{format(date, "PPPP")}</span>
               <ul className="list-inside">
                 {chunkedDates[date].map((range, index) => (

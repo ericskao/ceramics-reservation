@@ -1,14 +1,13 @@
 import type { NextRequest } from "next/server";
-import { NextResponse } from "next/server";
 
 export function middleware(request: NextRequest) {
   const currentUser = false;
-  if (currentUser && request.url.includes("/login")) {
-    return NextResponse.redirect(new URL("/", request.url));
-  }
-  if (!currentUser && !request.url.includes("/login")) {
-    return NextResponse.redirect(new URL("/login", request.url));
-  }
+  // if (currentUser && request.url.includes("/login")) {
+  //   return NextResponse.redirect(new URL("/", request.url));
+  // }
+  // if (!currentUser && !request.url.includes("/login")) {
+  //   return NextResponse.redirect(new URL("/login", request.url));
+  // }
 }
 
 export const config = {
