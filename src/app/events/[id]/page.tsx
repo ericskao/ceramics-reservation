@@ -1,10 +1,8 @@
 "use client";
 
-import ConfirmedDatesList from "@/components/features/ConfirmedDatesList";
+import EventTimes from "@/components/features/event/EventTimes";
 import Header from "@/components/shared/Header";
-import Login from "@/components/shared/Login";
 import { Button } from "@/components/ui/button";
-import Dialog from "@/components/ui/dialog";
 import { useEvent } from "@/hooks/useEvent";
 import { useGuests } from "@/hooks/useGuests";
 import { useUser } from "@/hooks/useUser";
@@ -12,10 +10,10 @@ import Image from "next/image";
 import Heading from "../../../../scheduler/corgical/src/components/ui/heading";
 
 export default function Event({ params }: { params: { id: string } }) {
-  // const { data, isLoading } = useEvent(params.id);
-  // const eventAttributes = data?.data.event.data.attributes;
-  const { userID } = useUser();
+  const { userId } = useUser();
+
   const isHost = false;
+  const isInvited = false;
 
   const { eventDetails } = useEvent(params.id);
   const { guests } = useGuests(params.id);
@@ -43,6 +41,8 @@ export default function Event({ params }: { params: { id: string } }) {
 
   const addMoreTimesClick = () => {};
 
+  console.log("eventDetails", eventDetails);
+
   return (
     <>
       <Header />
@@ -57,26 +57,12 @@ export default function Event({ params }: { params: { id: string } }) {
             <Image src={eventDetails.img} alt="gif" width={480} height={290} />
           )}
         </div>
-        {eventDetails.availableTimes && (
-          <>
-            <ConfirmedDatesList
-              userID={userID}
-              confirmedTimes={eventDetails.availableTimes}
-            />
-            <Dialog
-              classNames={{
-                content: "rounded-t-3xl p-4",
-              }}
-              trigger={
-                <Button variant="secondary" onClick={addMoreTimesClick}>
-                  Add more times
-                </Button>
-              }
-            >
-              <Login />
-            </Dialog>
-          </>
-        )}
+        <EventTimes
+          availableTimes={eventDetails?.availableTimes}
+          userId={userId}
+          // guestList={[]}
+        />
+
         {isHost && <Button onClick={onInviteClick}>Publish Event</Button>}
 
         {/* {isLoading ? (

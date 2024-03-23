@@ -1,7 +1,8 @@
 export const useUser = () => {
-  const userID = 1;
+  const userId = 1;
+  // const userId = null;
 
   return {
-    userID,
+    userId,
   };
 };

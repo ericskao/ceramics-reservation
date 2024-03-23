@@ -15,12 +15,14 @@ const IndeterminateCheckbox = ({
         if (!setCheckedState) {
           return;
         }
-        if (checkedState === undefined || checkedState === false) {
+        if (checkedState === undefined) {
           setCheckedState(true);
-        } else if (checkedState === true) {
+        } else if (checkedState === false) {
           setCheckedState("indeterminate");
-        } else if (checkedState === "indeterminate") {
+        } else if (checkedState === true) {
           setCheckedState(false);
+        } else if (checkedState === "indeterminate") {
+          setCheckedState(true);
         }
       }}
     >

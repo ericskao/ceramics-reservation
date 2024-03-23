@@ -1,31 +1,15 @@
-import { compareAsc, format, formatISO } from "date-fns";
+import { chunkDates } from "@/utils/dates";
+import { compareAsc, format } from "date-fns";
 import { ConfirmedTimeType } from "./EventForm.types";
-
-type ChunkedTimesType = {
-  [isoKeys: string]: ConfirmedTimeType[];
-};
 
 const ConfirmedDatesList = ({
   confirmedTimes = [],
-  userID,
 }: {
   confirmedTimes: ConfirmedTimeType[];
-  userID?: number;
 }) => {
-  const chunkedDates = confirmedTimes.reduce((acc: ChunkedTimesType, curr) => {
-    const isoDateString = formatISO(curr.date);
-    if (!acc[isoDateString]) {
-      acc[isoDateString] = [curr];
-    } else {
-      acc[isoDateString].push(curr);
-    }
-    return acc;
-  }, {});
-
+  const chunkedDates = chunkDates(confirmedTimes);
   const sortedDates = Object.keys(chunkedDates).sort(compareAsc);
 
-  console.log("chunked", chunkedDates);
-  console.log("sortedDates", sortedDates);
   return (
     <div className="shadow-inner-secondary rounded-lg p-3 min-h-52 max-h-96 overflow-y-scroll">
       <ul className="flex flex-col gap-y-4">
