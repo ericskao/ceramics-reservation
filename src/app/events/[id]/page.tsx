@@ -12,7 +12,7 @@ import Heading from "../../../../scheduler/corgical/src/components/ui/heading";
 export default function Event({ params }: { params: { id: string } }) {
   const { userId } = useUser();
 
-  const isHost = false;
+  const isHost = false; // get this info from /events/:id
   const isInvited = false;
 
   const { eventDetails } = useEvent(params.id);
