@@ -1,6 +1,7 @@
 "use client";
 
 import useDebounce from "@/hooks/useDebounce";
+import { useEventStore } from "@/store/store";
 import { GiphyFetch } from "@giphy/js-fetch-api";
 import * as Form from "@radix-ui/react-form";
 import Image from "next/image";
@@ -49,6 +50,8 @@ const EventForm = () => {
     router.push(`/events/${id}`);
   };
 
+  const eventStore = useEventStore();
+
   return (
     <Form.Root
       onSubmit={onFormSubmit}
@@ -93,26 +96,29 @@ const EventForm = () => {
         </Form.Control>
       </Form.Field>
       <Form.Field name="eventDate" className="flex flex-col relative">
-        <Form.Control className="relative" asChild>
-          <Dialog
-            classNames={{
-              content: "bottom-0 w-full h-5/6 rounded-t-3xl",
-            }}
-            trigger={
-              <div>
-                <Button className="text-xs pb-0 pl-0 underline" variant="link">
-                  Add Dates
-                </Button>
-                <ConfirmedDatesList confirmedTimes={confirmedTimes} />
-              </div>
-            }
-          >
-            <CalendarDatePicker
-              confirmedTimes={confirmedTimes}
-              setConfirmedTimes={setConfirmedTimes}
-            />
-          </Dialog>
-        </Form.Control>
+        <Dialog
+          classNames={{
+            content: "bottom-0 w-full h-5/6 rounded-t-3xl",
+          }}
+          overflowHidden={eventStore.hourPickerOpen}
+          trigger={
+            <div>
+              <Button
+                className="text-xs pb-0 pl-0 underline"
+                variant="link"
+                onClick={(e) => e.stopPropagation()}
+              >
+                Add Dates
+              </Button>
+              <ConfirmedDatesList confirmedTimes={confirmedTimes} />
+            </div>
+          }
+        >
+          <CalendarDatePicker
+            confirmedTimes={confirmedTimes}
+            setConfirmedTimes={setConfirmedTimes}
+          />
+        </Dialog>
       </Form.Field>
       <Form.Submit asChild>
         <Button disabled={!eventName} className="mt-auto">

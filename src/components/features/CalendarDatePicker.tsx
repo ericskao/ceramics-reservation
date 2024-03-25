@@ -1,4 +1,5 @@
 import { cn } from "@/lib/utils";
+import { useEventStore } from "@/store/store";
 import {
   addHours,
   addMonths,
@@ -24,10 +25,16 @@ import HourPicker from "./HourPicker";
 
 const CalendarDatePicker = ({
   confirmedTimes,
+  proposedTimes,
   setConfirmedTimes,
+  addProposedTime,
+  removeProposedTime,
 }: {
   confirmedTimes: ConfirmedTimeType[];
-  setConfirmedTimes: Dispatch<SetStateAction<ConfirmedTimeType[]>>;
+  setConfirmedTimes?: Dispatch<SetStateAction<ConfirmedTimeType[]>>;
+  proposedTimes?: ConfirmedTimeType[];
+  addProposedTime?: any;
+  removeProposedTime?: any;
 }) => {
   const today = new Date();
   const [months, setMonths] = useState<Date[][]>([]);
@@ -35,6 +42,8 @@ const CalendarDatePicker = ({
   const [startTime, setStartTime] = useState<number | null>(null);
   const [endTime, setEndTime] = useState<number | null>(null);
   const [numOfMonths, setNumOfMonths] = useState<number>(3);
+
+  const eventStore = useEventStore();
 
   const prependMonthFn = useCallback((monthArr: Date[]) => {
     const numDaysAfterSunday = getDay(monthArr[0]);
@@ -67,12 +76,15 @@ const CalendarDatePicker = ({
 
   const clearState = (close: boolean) => {
     close && setDateSelected(null);
+    eventStore.setHourPickerOpen(false);
     setStartTime(null);
     setEndTime(null);
   };
 
   const onRemoveTime = (timeRange: ConfirmedTimeType) => {
-    const filteredTimes = confirmedTimes.filter(
+    let filteredTimes = (
+      setConfirmedTimes ? confirmedTimes : proposedTimes || []
+    ).filter(
       (time) =>
         !(
           time.date === timeRange.date &&
@@ -80,7 +92,15 @@ const CalendarDatePicker = ({
           time.endTime === timeRange.endTime
         ),
     );
-    setConfirmedTimes(filteredTimes);
+    if (setConfirmedTimes) {
+      // setConfirmedTimes is passed, so this is host
+      setConfirmedTimes(filteredTimes);
+    } else if (removeProposedTime) {
+      // need to check if time to be removed is proposed by guest and not host
+      // filter out from proposedTimes
+      removeProposedTime({ name: "proposed removal" });
+    }
+
     clearState(false);
   };
 
@@ -91,17 +111,19 @@ const CalendarDatePicker = ({
     startTime: number;
     endTime?: number | null;
   }) => {
-    setConfirmedTimes([
-      ...confirmedTimes,
-      {
-        date: dateSelected as Date,
-        startTime: addHours(dateSelected as Date, startTime),
-        endTime:
-          endTime !== null && endTime !== undefined
-            ? addHours(dateSelected as Date, endTime)
-            : null,
-      },
-    ]);
+    setConfirmedTimes
+      ? setConfirmedTimes([
+          ...confirmedTimes,
+          {
+            date: dateSelected as Date,
+            startTime: addHours(dateSelected as Date, startTime),
+            endTime:
+              endTime !== null && endTime !== undefined
+                ? addHours(dateSelected as Date, endTime)
+                : null,
+          },
+        ])
+      : addProposedTime({ name: "proposd addition" });
     setTimeout(() => {
       clearState(false);
     }, 500);
@@ -148,9 +170,13 @@ const CalendarDatePicker = ({
                                       e.stopPropagation();
                                       if (disabled) {
                                         setDateSelected(null);
+                                        eventStore.setHourPickerOpen(false);
                                       } else {
                                         setDateSelected(
                                           dateSelected === date ? null : date,
+                                        );
+                                        eventStore.setHourPickerOpen(
+                                          dateSelected === date ? false : true,
                                         );
                                       }
                                     }}

@@ -45,7 +45,7 @@ const HourPicker = ({
   const todaySelected = isToday(selectedDate);
 
   return (
-    <section className="bg-white w-screen border-t-2 border-gray-200 h-[250px] fixed bottom-0 z-10 flex pt-3">
+    <section className="bg-white w-screen border-t-2 border-gray-200 h-[250px] sticky bottom-0 z-10 flex pt-3">
       {/* <div className="flex justify-between px-3">
         <h2 className="font-bold text-xl mb-2">
           {format(selectedDate, "EEEE, LLLL do")}
