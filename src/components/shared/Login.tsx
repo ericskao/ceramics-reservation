@@ -3,35 +3,53 @@ import Heading from "@/components/ui/heading";
 import { Input } from "@/components/ui/input";
 import { useLogin } from "@/hooks/useLogin";
 import { cn } from "@/lib/utils";
+import axios from "axios";
 import startsWith from "lodash.startswith";
 import { Check, Loader } from "lucide-react";
 import Link from "next/link";
 import { useCallback, useEffect, useState } from "react";
 import PhoneInput, { CountryData } from "react-phone-input-2";
+import Cookies from "js-cookie";
 
 import "react-phone-input-2/lib/style.css";
 
 const Login = () => {
   const [value, setValue] = useState<string | undefined>();
   const [selectedCountry, setSelectedCountry] = useState<CountryData>();
-  const [verificationCode, setVerificationCode] = useState<
-    string | undefined
-  >();
+  const [verificationCode, setVerificationCode] = useState<string>("");
   const [verifying, setVerifying] = useState<boolean>(false);
   const [isVerified, setIsVerified] = useState<boolean>(false);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [loginSuccess, setLoginSuccess] = useState<boolean>(false);
 
   useEffect(() => {
-    if ((verificationCode?.length || 0) === 5) {
-      // verify code post call
+    console.log("setVerificationCode in useEffect: ", verificationCode);
+    if (verificationCode.length === 6) {
+      setErrorMessage("");
       setVerifying(true);
-      setTimeout(() => {
-        setVerifying(false);
-        setIsVerified(true);
-      }, 2000);
+      axios
+        .post("http://localhost:3000/api/v1/login", { code: verificationCode })
+        .then((response) => {
+          setVerifying(false);
+          setIsVerified(true);
+          Cookies.set("token", response.data.token, {
+            expires: 7,
+            secure: true,
+          });
+          Cookies.set("user", JSON.stringify(response.data.user), {
+            expires: 7,
+            secure: true,
+          });
+        })
+        .catch((error) => {
+          console.log("error: ", error);
+        });
+    } else if (verificationCode.length > 6) {
+      console.log("setErrorMessage in useEffect: ", verificationCode);
+      setErrorMessage("Verification code must be 6 digits");
     }
   }, [verificationCode]);
-
-  const { login, isLoading, loginSuccess } = useLogin();
 
   const isValidPhoneNumber = useCallback(() => {
     const phoneLength = value?.length || 0;
@@ -44,9 +62,23 @@ const Login = () => {
     return isValid;
   }, [selectedCountry, value]);
 
-  const onLoginClick = () => {
-    value && isValid && login(value);
-  };
+  const onLoginClick = useCallback(() => {
+    if (value) {
+      setIsLoading(true);
+      axios
+        .post("http://localhost:3000/api/v1/send_auth_code", {
+          phone_number: value,
+        })
+        .then((response) => {
+          // console.log("send auth code response: ", response);
+          setIsLoading(false);
+          setLoginSuccess(true);
+        })
+        .catch((error) => {
+          console.log("end auth code response error: ", error);
+        });
+    }
+  }, [value]); // Added dependencies array
 
   const isValid = isValidPhoneNumber();
   return (
@@ -89,23 +121,10 @@ const Login = () => {
             <span>Verification Code</span>
             <div className="flex items-center relative">
               <Input
-                value={verificationCode}
-                onKeyDown={(e) => {
-                  if (e.key === "Backspace") {
-                    setVerificationCode(
-                      verificationCode?.slice(0, verificationCode.length - 1),
-                    );
-                  } else if (
-                    (verificationCode?.length || 0) < 5 &&
-                    e.key >= "0" &&
-                    e.key <= "9"
-                  ) {
-                    setVerificationCode((verificationCode || "") + e.key);
-                  }
-                }}
+                onInputChange={(e) => setVerificationCode(e.target.value)}
                 className={{ root: "w-32 mt-1", input: "text-center" }}
                 autoFocus
-                inputType="number"
+                maxLength={6}
               />
               {verifying && (
                 <Loader className={cn("animate-spin absolute right-2")} />
