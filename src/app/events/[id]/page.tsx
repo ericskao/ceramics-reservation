@@ -59,7 +59,6 @@ export default function Event({ params }: { params: { id: string } }) {
         </div>
         <EventTimes
           availableTimes={eventDetails?.availableTimes}
-          userId={userId}
           // guestList={[]}
         />
 

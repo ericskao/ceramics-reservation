@@ -18,6 +18,7 @@ const HourPicker = ({
   confirmedTimes,
   onRemoveTime,
   selectedDate,
+  guestProposedTimes,
 }: {
   onClose: () => void;
   onConfirmTime: ({
@@ -32,6 +33,7 @@ const HourPicker = ({
   endTime: number | null;
   setEndTime: Dispatch<SetStateAction<number | null>>;
   confirmedTimes: ConfirmedTimeType[];
+  guestProposedTimes: ConfirmedTimeType[];
   onRemoveTime: (timeRange: ConfirmedTimeType) => void;
   selectedDate: Date;
 }) => {
@@ -42,6 +44,11 @@ const HourPicker = ({
   const confirmedTimesForDate = confirmedTimes.filter((time) =>
     isSameDay(time.date, selectedDate),
   );
+  const proposedTimesForDate = guestProposedTimes.filter((time) =>
+    isSameDay(time.date, selectedDate),
+  );
+  console.log("proposedTimesForDate", proposedTimesForDate);
+
   const todaySelected = isToday(selectedDate);
 
   return (
@@ -57,10 +64,12 @@ const HourPicker = ({
 
       <div className="flex flex-col flex-1 justify-between h-full relative">
         <div className="flex h-full pb-[42px]">
-          {confirmedTimesForDate.length > 0 && !addTimeEnabled ? (
+          {(confirmedTimesForDate.length > 0 ||
+            proposedTimesForDate.length > 0) &&
+          !addTimeEnabled ? (
             <div className="p-4 h-full flex flex-col">
               <h2 className="font-bold text-xl mb-2">
-                {format(confirmedTimesForDate[0].date, "EEEE, LLLL do")}{" "}
+                {format(selectedDate, "EEEE, LLLL do")}{" "}
               </h2>
               <ul className="flex-1 overflow-scroll">
                 {confirmedTimesForDate.map((range, index) => (
@@ -88,6 +97,35 @@ const HourPicker = ({
                     </Button>
                   </h3>
                 ))}
+                {proposedTimesForDate.map((range, index) => {
+                  return (
+                    <h3 key={index} className="text-lg">
+                      <Button
+                        onClick={() =>
+                          setSelectedTimeRange(
+                            selectedTimeRange?.date === range.date &&
+                              selectedTimeRange?.startTime ===
+                                range.startTime &&
+                              selectedTimeRange.endTime === range.endTime
+                              ? null
+                              : range,
+                          )
+                        }
+                        variant="ghost"
+                        className={cn({
+                          "border border-gray-700":
+                            range.date === selectedTimeRange?.date &&
+                            range.startTime === selectedTimeRange.startTime &&
+                            range.endTime === selectedTimeRange.endTime,
+                        })}
+                      >
+                        {format(range.startTime, "h:mmaa")}
+                        {range.endTime &&
+                          ` - ${format(range.endTime, "h:mmaa")}`}
+                      </Button>
+                    </h3>
+                  );
+                })}
               </ul>
             </div>
           ) : (
@@ -125,7 +163,9 @@ const HourPicker = ({
             )}
         </div>
         <div className="absolute bottom-0 w-full">
-          {confirmedTimesForDate.length > 0 && !addTimeEnabled ? (
+          {(confirmedTimesForDate.length > 0 ||
+            proposedTimesForDate.length > 0) &&
+          !addTimeEnabled ? (
             <div className="flex">
               {!addTimeEnabled && selectedTimeRange && (
                 <Alert

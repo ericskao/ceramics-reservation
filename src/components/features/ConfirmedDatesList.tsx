@@ -12,6 +12,9 @@ const ConfirmedDatesList = ({
 
   return (
     <div className="shadow-inner-secondary rounded-lg p-3 min-h-52 max-h-96 overflow-y-scroll">
+      {confirmedTimes?.length === 0 && (
+        <span className="text-secondary-text">Add event times</span>
+      )}
       <ul className="flex flex-col gap-y-4">
         {sortedDates.map((date, index) => {
           return (

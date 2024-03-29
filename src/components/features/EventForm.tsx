@@ -16,7 +16,7 @@ import { ConfirmedTimeType } from "./EventForm.types";
 
 const EventForm = () => {
   const router = useRouter();
-  const [confirmedTimes, setConfirmedTimes] = useState<ConfirmedTimeType[]>([]);
+  const [proposedTimes, setProposedTimes] = useState<ConfirmedTimeType[]>([]);
   const [eventName, setEventName] = useState<string>("");
   const [eventDescription, setEventDescription] = useState<string>("");
   const [eventLocation, setEventLocation] = useState<string>("");
@@ -40,7 +40,7 @@ const EventForm = () => {
       name: eventName,
       description: eventDescription,
       location: eventLocation,
-      availableTimes: confirmedTimes,
+      availableTimes: proposedTimes,
       img: gif,
     };
     const savedEvents = localEvents ? JSON.parse(localEvents) : [];
@@ -100,23 +100,15 @@ const EventForm = () => {
           classNames={{
             content: "bottom-0 w-full h-5/6 rounded-t-3xl",
           }}
-          overflowHidden={eventStore.hourPickerOpen}
           trigger={
             <div>
-              <Button
-                className="text-xs pb-0 pl-0 underline"
-                variant="link"
-                onClick={(e) => e.stopPropagation()}
-              >
-                Add Dates
-              </Button>
-              <ConfirmedDatesList confirmedTimes={confirmedTimes} />
+              <ConfirmedDatesList confirmedTimes={proposedTimes} />
             </div>
           }
         >
           <CalendarDatePicker
-            confirmedTimes={confirmedTimes}
-            setConfirmedTimes={setConfirmedTimes}
+            confirmedTimes={proposedTimes}
+            setProposedTimes={setProposedTimes}
           />
         </Dialog>
       </Form.Field>

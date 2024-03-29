@@ -1,6 +1,6 @@
-import Login from "@/components/shared/Login";
 import { Button } from "@/components/ui/button";
 import Dialog from "@/components/ui/dialog";
+import { useUser } from "@/hooks/useUser";
 import { useEventStore } from "@/store/store";
 import { chunkDates } from "@/utils/dates";
 import { compareAsc, format } from "date-fns";
@@ -18,7 +18,6 @@ const guestListMock = [
 
 const EventTimes = ({
   availableTimes,
-  userId,
   guestList,
 }: {
   availableTimes: ConfirmedTimeType[];
@@ -26,17 +25,15 @@ const EventTimes = ({
   guestList?: any;
 }) => {
   const eventStore = useEventStore();
-
+  const { userId } = useUser();
   // proposed times are user suggested times; users should be able to add and also remove their suggested times, but not remove other peoples suggested times
 
-  const [proposedTimes, setProposedTimes] = useState<ConfirmedTimeType[]>([]);
+  const [guestProposedTimes, setGuestProposedTimes] = useState<
+    ConfirmedTimeType[]
+  >([]);
 
-  const addProposedTime = (time: any) => {
-    console.log("adding this time", time);
-  };
-
-  const removeProposedTime = (time: any) => {
-    console.log("removing this time", time);
+  const addProposedTime = (proposedTime: ConfirmedTimeType) => {
+    setGuestProposedTimes([...guestProposedTimes, proposedTime]);
   };
 
   const setProposedTime = (time: any) => {
@@ -53,51 +50,45 @@ const EventTimes = ({
   const sortedDates = Object.keys(chunkedDates).sort(compareAsc);
 
   return (
-    <div className="flex flex-col gap-y-3">
-      <ul className="flex flex-col gap-y-2">
-        {sortedDates.map((date) => {
-          return (
-            <li key={date} className="flex">
-              <div>
-                <div>{format(date, "PPPP")}</div>
-                <ul className="list-inside">
-                  {chunkedDates[date].map((eventTime, index) => (
-                    <EventTimeSelect key={index} eventTime={eventTime} />
-                  ))}
-                </ul>
-              </div>
-            </li>
-          );
-        })}
-      </ul>
-      {userId ? (
+    <>
+      <div className="flex flex-col gap-y-3 border border-secondary rounded-md p-4">
+        <ul className="flex flex-col gap-y-2">
+          {sortedDates.map((date) => {
+            return (
+              <li key={date} className="flex">
+                <div>
+                  <div className="flex">
+                    {chunkedDates[date].length > 1 && <button>{"V"}</button>}
+                    <div>{format(date, "PPPP")}</div>
+                  </div>
+
+                  <ul className="list-inside">
+                    {chunkedDates[date].map((eventTime, index) => (
+                      <EventTimeSelect key={index} eventTime={eventTime} />
+                    ))}
+                  </ul>
+                </div>
+              </li>
+            );
+          })}
+        </ul>
         <Dialog
           classNames={{
             content: "bottom-0 w-full h-5/6 rounded-t-3xl",
           }}
           overflowHidden={eventStore.hourPickerOpen}
-          trigger={
-            <Button variant="secondary">Add More Times - pop hour adder</Button>
-          }
+          trigger={<Button variant="secondary">Add More Times</Button>}
         >
           <CalendarDatePicker
             confirmedTimes={availableTimes}
-            proposedTimes={proposedTimes}
+            guestProposedTimes={guestProposedTimes}
             addProposedTime={addProposedTime}
-            removeProposedTime={removeProposedTime}
+            removeProposedTime={setGuestProposedTimes}
           />
         </Dialog>
-      ) : (
-        <Dialog
-          classNames={{
-            content: "rounded-t-3xl p-4",
-          }}
-          trigger={<Button variant="secondary">Add More Times (login)</Button>}
-        >
-          <Login />
-        </Dialog>
-      )}
-    </div>
+      </div>
+      {guestProposedTimes.length > 0 && <Button>Save Changes</Button>}
+    </>
   );
 };
 

@@ -25,15 +25,15 @@ import HourPicker from "./HourPicker";
 
 const CalendarDatePicker = ({
   confirmedTimes,
-  proposedTimes,
-  setConfirmedTimes,
+  guestProposedTimes = [],
+  setProposedTimes,
   addProposedTime,
   removeProposedTime,
 }: {
   confirmedTimes: ConfirmedTimeType[];
-  setConfirmedTimes?: Dispatch<SetStateAction<ConfirmedTimeType[]>>;
-  proposedTimes?: ConfirmedTimeType[];
-  addProposedTime?: any;
+  setProposedTimes?: Dispatch<SetStateAction<ConfirmedTimeType[]>>;
+  guestProposedTimes?: ConfirmedTimeType[];
+  addProposedTime?: (proposedTime: ConfirmedTimeType) => void;
   removeProposedTime?: any;
 }) => {
   const today = new Date();
@@ -50,6 +50,8 @@ const CalendarDatePicker = ({
     const nullArray = Array(numDaysAfterSunday).fill(null);
     return [...nullArray, ...monthArr];
   }, []);
+
+  console.log("guest proposed times in cdp", guestProposedTimes);
 
   useEffect(() => {
     const currentDate = new Date();
@@ -83,7 +85,7 @@ const CalendarDatePicker = ({
 
   const onRemoveTime = (timeRange: ConfirmedTimeType) => {
     let filteredTimes = (
-      setConfirmedTimes ? confirmedTimes : proposedTimes || []
+      setProposedTimes ? confirmedTimes : guestProposedTimes
     ).filter(
       (time) =>
         !(
@@ -92,15 +94,14 @@ const CalendarDatePicker = ({
           time.endTime === timeRange.endTime
         ),
     );
-    if (setConfirmedTimes) {
-      // setConfirmedTimes is passed, so this is host
-      setConfirmedTimes(filteredTimes);
+    if (setProposedTimes) {
+      // setProposedTimes is passed (event creation), so this is host
+      setProposedTimes(filteredTimes);
     } else if (removeProposedTime) {
       // need to check if time to be removed is proposed by guest and not host
       // filter out from proposedTimes
-      removeProposedTime({ name: "proposed removal" });
+      removeProposedTime(filteredTimes);
     }
-
     clearState(false);
   };
 
@@ -111,19 +112,30 @@ const CalendarDatePicker = ({
     startTime: number;
     endTime?: number | null;
   }) => {
-    setConfirmedTimes
-      ? setConfirmedTimes([
-          ...confirmedTimes,
-          {
-            date: dateSelected as Date,
-            startTime: addHours(dateSelected as Date, startTime),
-            endTime:
-              endTime !== null && endTime !== undefined
-                ? addHours(dateSelected as Date, endTime)
-                : null,
-          },
-        ])
-      : addProposedTime({ name: "proposd addition" });
+    // if setProposedTime is passed in, that means we are in event creation, else event has been created already and we are adding new times
+    if (setProposedTimes) {
+      setProposedTimes([
+        ...confirmedTimes,
+        {
+          date: dateSelected as Date,
+          startTime: addHours(dateSelected as Date, startTime),
+          endTime:
+            endTime !== null && endTime !== undefined
+              ? addHours(dateSelected as Date, endTime)
+              : null,
+        },
+      ]);
+    } else if (addProposedTime) {
+      console.log(startTime, endTime, dateSelected);
+      addProposedTime({
+        date: dateSelected as Date,
+        startTime: addHours(dateSelected as Date, startTime),
+        endTime:
+          endTime !== null && endTime !== undefined
+            ? addHours(dateSelected as Date, endTime)
+            : null,
+      });
+    }
     setTimeout(() => {
       clearState(false);
     }, 500);
@@ -163,6 +175,9 @@ const CalendarDatePicker = ({
                               const isConfirmed = confirmedTimes.find((time) =>
                                 isSameDay(time.date, date),
                               );
+                              const isGuestProposed = guestProposedTimes.find(
+                                (time) => isSameDay(time.date, date),
+                              );
                               return (
                                 <td className="text-center" key={index}>
                                   <button
@@ -187,8 +202,10 @@ const CalendarDatePicker = ({
                                         date === dateSelected && !!date,
                                       "bg-primary text-white rounded-full font-extrabold":
                                         isConfirmed,
+                                      "bg-blue-500 text-white rounded-full font-extrabold":
+                                        isGuestProposed,
                                       "border-4 border-black/30":
-                                        isConfirmed &&
+                                        (isConfirmed || isGuestProposed) &&
                                         date === dateSelected &&
                                         !!date,
                                     })}
@@ -219,7 +236,7 @@ const CalendarDatePicker = ({
               );
             })}
           </div>
-          <div className="text-center pt-4">
+          <div className="text-center pt-4 pb-12">
             <Button onClick={loadMoreDates} variant="secondary">
               Load more dates
             </Button>
@@ -231,6 +248,7 @@ const CalendarDatePicker = ({
           selectedDate={dateSelected}
           onConfirmTime={onConfirmTime}
           confirmedTimes={confirmedTimes}
+          guestProposedTimes={guestProposedTimes}
           onRemoveTime={onRemoveTime}
           startTime={startTime}
           setStartTime={setStartTime}

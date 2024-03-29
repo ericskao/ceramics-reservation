@@ -1,8 +1,9 @@
+import { decodeCookie } from "@/utils/tokens";
+
 export const useUser = () => {
-  const userId = 1;
-  // const userId = null;
+  const decoded = decodeCookie(document.cookie);
 
   return {
-    userId,
+    userId: decoded?.user_id,
   };
 };
