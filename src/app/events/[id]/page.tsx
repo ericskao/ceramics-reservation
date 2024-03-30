@@ -3,11 +3,11 @@
 import EventTimes from "@/components/features/event/EventTimes";
 import Header from "@/components/shared/Header";
 import { Button } from "@/components/ui/button";
+import Heading from "@/components/ui/heading";
 import { useEvent } from "@/hooks/useEvent";
 import { useGuests } from "@/hooks/useGuests";
 import { useUser } from "@/hooks/useUser";
 import Image from "next/image";
-import Heading from "../../../../scheduler/corgical/src/components/ui/heading";
 
 export default function Event({ params }: { params: { id: string } }) {
   const { userId } = useUser();

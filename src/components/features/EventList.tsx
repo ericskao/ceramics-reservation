@@ -1,11 +1,10 @@
 "use client";
 
+import axiosInstance from "@/api/axiosInstance";
+import Cookies from "js-cookie";
 import { useEffect, useState } from "react";
 import { Tabs } from "../ui/tabs";
 import EventCard from "./EventCard";
-import Cookies from "js-cookie";
-import axios from "axios";
-import { useEvent } from "../../../scheduler/corgical/src/hooks/useEvent";
 
 const EventTypeEnum = {
   HERDING: "herding",
@@ -25,19 +24,11 @@ const EventList = () => {
   });
 
   const getEvents = async () => {
+    console.log("geting events");
     // TODO: FIX THIS. Checking for events length is a temporary workaround to prevent infinite loop
     if (token && events.length === 0) {
       try {
-        const response = await axios.get(
-          "http://localhost:3000/api/v1/events",
-          {
-            headers: {
-              "Content-Type": "application/json",
-              Accept: "application/json",
-              Authorization: `Bearer ${token}`,
-            },
-          },
-        );
+        const response = await axiosInstance.get("/events");
         console.log("GET EVENTS response: ", response);
         setEvents(response.data);
       } catch (error) {
