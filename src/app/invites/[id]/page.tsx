@@ -103,9 +103,9 @@ export default function Invite({ params }: { params: { id: string } }) {
           >
             <CalendarDatePicker
               confirmedTimes={mockData.availableTimes}
-              setConfirmedTimes={() => {
-                console.log("setting time");
-              }}
+              // setConfirmedTimes={() => {
+              //   console.log("setting time");
+              // }}
             />
           </Dialog>
         </div>
