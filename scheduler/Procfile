@@ -1,2 +1,0 @@
-web: bundle exec puma -C config/puma.rb -t 5:5
-release: bundle exec rake db:migrate

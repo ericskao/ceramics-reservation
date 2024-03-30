@@ -1,6 +1,0 @@
-
-.section
-  .buttons.is-centered
-    = link_to 'Create New Event', new_event_path, class: 'button'
-    - if current_user.blank? || current_user.temp?
-      = link_to 'Sign In', login_view_path, class: 'button'
