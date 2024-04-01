@@ -1,7 +1,7 @@
 import axios from "axios";
 import Cookies from "js-cookie";
 
-const axiosInstance = axios.create({
+const apiClient = axios.create({
   baseURL: "http://localhost:3000/api/v1",
   headers: {
     "Content-Type": "application/json",
@@ -10,4 +10,4 @@ const axiosInstance = axios.create({
   },
 });
 
-export default axiosInstance;
+export default apiClient;

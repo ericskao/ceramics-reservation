@@ -1,13 +1,10 @@
-import type { NextRequest } from "next/server";
+import { NextResponse, type NextRequest } from "next/server";
 
 export function middleware(request: NextRequest) {
-  const currentUser = false;
-  // if (currentUser && request.url.includes("/login")) {
-  //   return NextResponse.redirect(new URL("/", request.url));
-  // }
-  // if (!currentUser && !request.url.includes("/login")) {
-  //   return NextResponse.redirect(new URL("/login", request.url));
-  // }
+  const userCookie = request.cookies.get("user");
+  if (request.nextUrl.pathname === "/" && !userCookie) {
+    return NextResponse.redirect(new URL("/new", request.url));
+  }
 }
 
 export const config = {

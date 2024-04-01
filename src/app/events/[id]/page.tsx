@@ -5,25 +5,21 @@ import Header from "@/components/shared/Header";
 import { Button } from "@/components/ui/button";
 import Heading from "@/components/ui/heading";
 import { useEvent } from "@/hooks/useEvent";
-import { useGuests } from "@/hooks/useGuests";
 import { useUser } from "@/hooks/useUser";
-import Image from "next/image";
 
 export default function Event({ params }: { params: { id: string } }) {
   const { userId } = useUser();
+  const { event, isLoading, guests } = useEvent({ id: params.id });
 
-  const isHost = false; // get this info from /events/:id
-  const isInvited = false;
-
-  const { eventDetails } = useEvent(params.id);
-  const { guests } = useGuests(params.id);
+  const host = guests?.user?.data?.id;
+  const isHost = host === userId;
 
   const onInviteClick = () => {
     if (navigator.share) {
       navigator
         .share({
-          title: eventDetails.name,
-          text: eventDetails.description || "Come join this event!",
+          title: event.title,
+          text: event.description || "Come join this event!",
           url: "https://calevent-4ylwmidyp-ericskao.vercel.app/events/13",
         })
         .then(() => {
@@ -41,37 +37,30 @@ export default function Event({ params }: { params: { id: string } }) {
 
   const addMoreTimesClick = () => {};
 
-  console.log("eventDetails", eventDetails);
-
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
   return (
     <>
       <Header />
       <div className="flex flex-col py-4 px-6 gap-y-3">
         <div className="text-center">
-          <Heading as="h1">{eventDetails.name}</Heading>
-          <div className="text-sm">Hosted by User</div>
+          <Heading as="h1">{event.title}</Heading>
+          <div className="text-sm">
+            Hosted by <div className="">{guests.user.data.id}</div>
+          </div>
         </div>
-        <div className="">{eventDetails.description}</div>
-        <div>
+        <div className="">{event.description}</div>
+        {/* <div>
           {eventDetails.img && (
             <Image src={eventDetails.img} alt="gif" width={480} height={290} />
           )}
-        </div>
+        </div> */}
         <EventTimes
-          availableTimes={eventDetails?.availableTimes}
+          availableTimes={event?.availableTimes}
           // guestList={[]}
         />
-
         {isHost && <Button onClick={onInviteClick}>Publish Event</Button>}
-
-        {/* {isLoading ? (
-        <h2>Loading...</h2>
-      ) : (
-        <div>
-          <Heading as="h1">{eventAttributes?.title}</Heading>
-          <Heading as="h3">{eventAttributes?.description}</Heading>
-        </div>
-      )} */}
       </div>
     </>
   );

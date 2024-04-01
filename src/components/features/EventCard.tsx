@@ -1,16 +1,23 @@
-import Image from "next/image";
+import { EventInterface } from "@/types/events.types";
 import Link from "next/link";
-import birthday from "../../../public/assets/park.jpeg";
 
-const EventCard = () => {
+const EventCard = ({
+  isHost,
+  event,
+}: {
+  event: EventInterface;
+  isHost?: boolean;
+}) => {
   return (
-    <Link href="/events/1">
+    <Link href={`/events/${event.attributes.code}`}>
       <div>
         <div className="relative">
-          <Image className="rounded" src={birthday} alt="birthday" />
-          <div className="absolute right-0 top-0 bg-black text-white p-2">
-            HOSTING
-          </div>
+          <div className="h-[200px] bg-slate-500" />
+          {isHost && (
+            <div className="absolute right-0 top-0 bg-black text-white p-2">
+              HOSTING
+            </div>
+          )}
           <div className="absolute right-0 bottom-0 pb-1 pr-2">
             <div className="flex relative">
               <div className="bg-blue-300 rounded-full p-1 text-xs border-white border">
@@ -27,10 +34,17 @@ const EventCard = () => {
         </div>
         <div>
           <div className="flex items-center justify-between">
-            <div className="text-black font-semibold">soju night</div>
-            <div className="text-[#717171] text-sm">Hosted by Eric Kao</div>
+            <div className="text-black font-semibold">
+              {event.attributes.title}
+            </div>
+            <div className="text-[#717171] text-sm flex gap-x-1">
+              <div>Hosted by </div>
+              <div className="truncate w-40">
+                {event.relationships.user.data.id}
+              </div>
+            </div>
           </div>
-          <div>3 Optimal time options</div>
+          {/* <div>3 Optimal time options</div> */}
         </div>
       </div>
     </Link>

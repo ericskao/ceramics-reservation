@@ -1,8 +1,8 @@
 "use client";
 
-import axiosInstance from "@/api/axiosInstance";
+import { EventInterface } from "@/types/events.types";
 import Cookies from "js-cookie";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Tabs } from "../ui/tabs";
 import EventCard from "./EventCard";
 
@@ -14,28 +14,17 @@ const EventTypeEnum = {
 
 type EventTypeEnum = (typeof EventTypeEnum)[keyof typeof EventTypeEnum];
 
-const EventList = () => {
+const EventList = ({
+  hostEvents = [],
+  participatingEvents = [],
+  pastEvents = [],
+}: {
+  hostEvents: EventInterface[];
+  participatingEvents: EventInterface[];
+  pastEvents: EventInterface[];
+}) => {
   const [eventType, setEventType] = useState<string>(EventTypeEnum.HERDING);
-  const [events, setEvents] = useState<any[]>([]);
   const token = Cookies.get("token");
-
-  useEffect(() => {
-    getEvents(), [];
-  });
-
-  const getEvents = async () => {
-    console.log("geting events");
-    // TODO: FIX THIS. Checking for events length is a temporary workaround to prevent infinite loop
-    if (token && events.length === 0) {
-      try {
-        const response = await axiosInstance.get("/events");
-        console.log("GET EVENTS response: ", response);
-        setEvents(response.data);
-      } catch (error) {
-        console.log("error in retrieving events: ", error);
-      }
-    }
-  };
 
   return (
     <section>
@@ -49,15 +38,11 @@ const EventList = () => {
         onValueChange={(eventType) => setEventType(eventType)}
       />
       <ul className="flex flex-col pt-3 gap-5">
-        <li>
-          <EventCard />
-        </li>
-        <li>
-          <EventCard />
-        </li>
-        <li>
-          <EventCard />
-        </li>
+        {hostEvents.map((event) => (
+          <li key={event.id}>
+            <EventCard isHost event={event} />
+          </li>
+        ))}
       </ul>
     </section>
   );

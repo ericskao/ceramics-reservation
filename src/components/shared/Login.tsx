@@ -1,16 +1,15 @@
 import { Button } from "@/components/ui/button";
 import Heading from "@/components/ui/heading";
 import { Input } from "@/components/ui/input";
-import { useLogin } from "@/hooks/useLogin";
 import { cn } from "@/lib/utils";
-import axios from "axios";
+import Cookies from "js-cookie";
 import startsWith from "lodash.startswith";
 import { Check, Loader } from "lucide-react";
 import Link from "next/link";
 import { useCallback, useEffect, useState } from "react";
 import PhoneInput, { CountryData } from "react-phone-input-2";
-import Cookies from "js-cookie";
 
+import apiClient from "@/api/apiClient";
 import "react-phone-input-2/lib/style.css";
 
 const Login = () => {
@@ -28,7 +27,7 @@ const Login = () => {
     if (verificationCode.length === 6) {
       setErrorMessage("");
       setVerifying(true);
-      axios
+      apiClient
         .post("http://localhost:3000/api/v1/login", { code: verificationCode })
         .then((response) => {
           setVerifying(false);
@@ -65,12 +64,11 @@ const Login = () => {
   const onLoginClick = useCallback(() => {
     if (value) {
       setIsLoading(true);
-      axios
+      apiClient
         .post("http://localhost:3000/api/v1/send_auth_code", {
           phone_number: value,
         })
         .then((response) => {
-          // console.log("send auth code response: ", response);
           setIsLoading(false);
           setLoginSuccess(true);
         })
