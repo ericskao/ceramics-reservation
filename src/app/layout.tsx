@@ -1,6 +1,5 @@
 import { ApiProvider } from "@/components/ApiProvider";
 import { ThemeProvider } from "@/components/theme-provider";
-import { ModeToggle } from "@/components/ui/mode-toggle";
 import { cn } from "@/lib/utils";
 import { Metadata } from "next";
 import { Inter as FontSans } from "next/font/google";
@@ -55,9 +54,9 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <div className="fixed top-2 right-2">
+          {/* <div className="fixed top-2 right-2">
             <ModeToggle />
-          </div>
+          </div> */}
           <ApiProvider>{children}</ApiProvider>
         </ThemeProvider>
       </body>

@@ -1,4 +1,5 @@
 import Link from "next/link";
+import UserProfileIcon from "../features/profile/UserProfileIcon";
 
 const Header = () => {
   return (
@@ -6,9 +7,7 @@ const Header = () => {
       <Link href="/" className="font-semibold text-xl">
         🗓 CorgiCal
       </Link>
-      {/* <div className="flex gap-3">
-        <Link href="/profile">Profile</Link>
-      </div> */}
+      <UserProfileIcon />
     </nav>
   );
 };
