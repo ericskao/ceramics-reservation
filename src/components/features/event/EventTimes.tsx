@@ -76,7 +76,6 @@ const EventTimes = ({
           classNames={{
             content: "bottom-0 w-full h-5/6 rounded-t-3xl",
           }}
-          overflowHidden={eventStore.hourPickerOpen}
           trigger={<Button variant="secondary">Add More Times</Button>}
         >
           <CalendarDatePicker

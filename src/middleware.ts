@@ -1,7 +1,7 @@
 import { type NextRequest } from "next/server";
 
 export function middleware(request: NextRequest) {
-  // const userCookie = request.cookies.get("user");
+  // const userCookie = request.cookies.get("token");
   // if (request.nextUrl.pathname === "/" && !userCookie) {
   //   return NextResponse.redirect(new URL("/new", request.url));
   // }

@@ -3,7 +3,7 @@ import * as RadixAvatar from "@radix-ui/react-avatar";
 const Avatar = () => {
   return (
     <>
-      <RadixAvatar.Root className="AvatarRoot inline-flex justify-center items-center align-middle w-11 h-11 rounded-full overflow-hidden border-2 border-solid border-gray-200">
+      <RadixAvatar.Root className="AvatarRoot inline-flex justify-center items-center align-middle w-11 h-11 rounded-full overflow-hidden">
         <RadixAvatar.Image
           className="AvatarImage object-cover w-full h-full"
           src=""
@@ -11,9 +11,9 @@ const Avatar = () => {
         />
         <RadixAvatar.Fallback
           className="AvatarFallback bg-slate-300 p-3"
-          delayMs={600}
+          delayMs={200}
         >
-          CT
+          User
         </RadixAvatar.Fallback>
       </RadixAvatar.Root>
     </>

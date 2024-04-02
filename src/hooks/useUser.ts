@@ -4,6 +4,8 @@ import { useEffect, useState } from "react";
 export const useUser = () => {
   const [cookie, setCookie] = useState<{ user_id: string } | undefined>();
 
+  // check store to see if authenticated and for user info
+
   useEffect(() => {
     const decoded = decodeCookie(document.cookie);
     setCookie(decoded);

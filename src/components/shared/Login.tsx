@@ -1,3 +1,4 @@
+import apiClient from "@/api/apiClient";
 import { Button } from "@/components/ui/button";
 import Heading from "@/components/ui/heading";
 import { Input } from "@/components/ui/input";
@@ -9,10 +10,9 @@ import Link from "next/link";
 import { useCallback, useEffect, useState } from "react";
 import PhoneInput, { CountryData } from "react-phone-input-2";
 
-import apiClient from "@/api/apiClient";
 import "react-phone-input-2/lib/style.css";
 
-const Login = () => {
+const Login = ({ closeCallback }: { closeCallback: () => void }) => {
   const [value, setValue] = useState<string | undefined>();
   const [selectedCountry, setSelectedCountry] = useState<CountryData>();
   const [verificationCode, setVerificationCode] = useState<string>("");
@@ -36,10 +36,7 @@ const Login = () => {
             expires: 7,
             secure: true,
           });
-          Cookies.set("user", JSON.stringify(response.data.user), {
-            expires: 7,
-            secure: true,
-          });
+          // save authenticated details to store
         })
         .catch((error) => {
           console.log("error: ", error);
@@ -133,7 +130,11 @@ const Login = () => {
             </div>
             {isVerified && (
               <Link href="/">
-                <Button className="mt-4" variant="secondary">
+                <Button
+                  className="mt-4"
+                  variant="secondary"
+                  onClick={closeCallback}
+                >
                   Accept TOS
                 </Button>
               </Link>
