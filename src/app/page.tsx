@@ -2,6 +2,7 @@
 
 import EventList from "@/components/features/EventList";
 import Header from "@/components/shared/Header";
+import NoSSR from "@/components/shared/NoSSR";
 import { Button } from "@/components/ui/button";
 import Heading from "@/components/ui/heading";
 import { useEvents } from "@/hooks/useEvents";
@@ -63,7 +64,9 @@ export default function Home() {
   return (
     <div className="flex min-h-screen flex-col items-center gap-y-3">
       <Header />
-      <main className="w-full px-4">{renderWelcomeScreen()}</main>
+      <NoSSR>
+        <main className="w-full px-4">{renderWelcomeScreen()}</main>
+      </NoSSR>
     </div>
   );
 }

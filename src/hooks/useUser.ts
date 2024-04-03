@@ -1,17 +1,12 @@
-import { decodeCookie } from "@/utils/tokens";
-import { useEffect, useState } from "react";
+import { getAccessToken, getAccessTokenData } from "@/store/auth-store";
 
 export const useUser = () => {
-  const [cookie, setCookie] = useState<{ user_id: string } | undefined>();
+  const data = getAccessTokenData();
+  const x = getAccessToken();
 
-  // check store to see if authenticated and for user info
-
-  useEffect(() => {
-    const decoded = decodeCookie(document.cookie);
-    setCookie(decoded);
-  }, [setCookie]);
+  console.log("data in useuser", data, x);
 
   return {
-    userId: cookie?.user_id,
+    userId: data?.user_id,
   };
 };

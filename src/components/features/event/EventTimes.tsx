@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import Dialog from "@/components/ui/dialog";
 import { useUser } from "@/hooks/useUser";
-import { useEventStore } from "@/store/store";
+import { useEventStore } from "@/store/eventStore";
 import { chunkDates } from "@/utils/dates";
 import { compareAsc, format } from "date-fns";
 import { useState } from "react";

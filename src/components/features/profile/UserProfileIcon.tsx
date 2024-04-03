@@ -5,14 +5,14 @@ import Avatar from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import Dialog from "@/components/ui/dialog";
 import { useUser } from "@/hooks/useUser";
+import { getActions } from "@/store/auth-store";
 import Cookies from "js-cookie";
 import { useState } from "react";
 
 const UserProfileIcon = () => {
   const [dialogOpen, setDialogOpen] = useState(false);
   const { userId } = useUser();
-
-  console.log("user id", userId);
+  const { clearTokens } = getActions();
 
   const closeDialog = () => {
     setDialogOpen(false);
@@ -20,6 +20,7 @@ const UserProfileIcon = () => {
 
   const onLogoutClick = () => {
     Cookies.remove("token");
+    clearTokens();
   };
 
   if (!userId) {
@@ -40,10 +41,6 @@ const UserProfileIcon = () => {
     <button onClick={onLogoutClick}>
       <Avatar />
     </button>
-
-    // <Link href="/profile">
-    //   <Avatar />
-    // </Link>
   );
 };
 

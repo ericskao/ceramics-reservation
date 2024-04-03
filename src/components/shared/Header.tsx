@@ -1,5 +1,8 @@
+"use client";
+
 import Link from "next/link";
 import UserProfileIcon from "../features/profile/UserProfileIcon";
+import NoSSR from "./NoSSR";
 
 const Header = () => {
   return (
@@ -7,7 +10,9 @@ const Header = () => {
       <Link href="/" className="font-semibold text-xl">
         🗓 CorgiCal
       </Link>
-      <UserProfileIcon />
+      <NoSSR>
+        <UserProfileIcon />
+      </NoSSR>
     </nav>
   );
 };

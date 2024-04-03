@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import Heading from "@/components/ui/heading";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
+import { getActions } from "@/store/auth-store";
 import Cookies from "js-cookie";
 import startsWith from "lodash.startswith";
 import { Check, Loader } from "lucide-react";
@@ -21,6 +22,7 @@ const Login = ({ closeCallback }: { closeCallback: () => void }) => {
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [loginSuccess, setLoginSuccess] = useState<boolean>(false);
+  const { setAccessToken } = getActions();
 
   useEffect(() => {
     console.log("setVerificationCode in useEffect: ", verificationCode);
@@ -36,7 +38,7 @@ const Login = ({ closeCallback }: { closeCallback: () => void }) => {
             expires: 7,
             secure: true,
           });
-          // save authenticated details to store
+          setAccessToken(response.data.token);
         })
         .catch((error) => {
           console.log("error: ", error);
@@ -45,7 +47,7 @@ const Login = ({ closeCallback }: { closeCallback: () => void }) => {
       console.log("setErrorMessage in useEffect: ", verificationCode);
       setErrorMessage("Verification code must be 6 digits");
     }
-  }, [verificationCode]);
+  }, [verificationCode, setAccessToken]);
 
   const isValidPhoneNumber = useCallback(() => {
     const phoneLength = value?.length || 0;

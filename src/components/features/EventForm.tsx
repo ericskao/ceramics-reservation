@@ -1,7 +1,7 @@
 "use client";
 
 import useDebounce from "@/hooks/useDebounce";
-import { useEventStore } from "@/store/store";
+import { useEventStore } from "@/store/eventStore";
 import { GiphyFetch } from "@giphy/js-fetch-api";
 import * as Form from "@radix-ui/react-form";
 import Image from "next/image";

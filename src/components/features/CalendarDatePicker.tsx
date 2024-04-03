@@ -1,5 +1,5 @@
 import { cn } from "@/lib/utils";
-import { useEventStore } from "@/store/store";
+import { useEventStore } from "@/store/eventStore";
 import {
   addHours,
   addMonths,
