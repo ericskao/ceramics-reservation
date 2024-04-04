@@ -13,7 +13,7 @@ import PhoneInput, { CountryData } from "react-phone-input-2";
 
 import "react-phone-input-2/lib/style.css";
 
-const Login = ({ closeCallback }: { closeCallback: () => void }) => {
+const Login = ({ closeCallback }: { closeCallback?: () => void }) => {
   const [value, setValue] = useState<string | undefined>();
   const [selectedCountry, setSelectedCountry] = useState<CountryData>();
   const [verificationCode, setVerificationCode] = useState<string>("");
