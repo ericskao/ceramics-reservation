@@ -13,7 +13,7 @@ export default function Home() {
   const { upcomingHostedEvents, upcomingParticipatingEvents, pastEvents } =
     useEvents();
 
-  const { userId } = useUser();
+  const { userId, token } = useUser();
 
   const upcomingEventsQuantity =
     upcomingHostedEvents.length + upcomingParticipatingEvents.length;

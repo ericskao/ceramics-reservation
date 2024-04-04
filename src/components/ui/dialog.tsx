@@ -9,8 +9,8 @@ const Dialog = ({
   open,
   setOpen,
 }: {
-  open: boolean;
-  setOpen: Dispatch<SetStateAction<boolean>>;
+  open?: boolean;
+  setOpen?: Dispatch<SetStateAction<boolean>>;
   trigger: React.ReactNode;
   children?: React.ReactNode;
   classNames?: {

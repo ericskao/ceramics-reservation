@@ -20,6 +20,6 @@ export const useAuthStore = create<AuthStore & Actions>()(
           token: undefined,
         })),
     }),
-    { name: "global", getStorage: () => localStorage },
+    { name: "global" },
   ),
 );

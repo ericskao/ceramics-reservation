@@ -29,7 +29,7 @@ const Login = ({ closeCallback }: { closeCallback: () => void }) => {
     if (verificationCode.length === 6) {
       setErrorMessage("");
       setVerifying(true);
-      apiClient
+      apiClient("")
         .post("http://localhost:3000/api/v1/login", { code: verificationCode })
         .then((response) => {
           setVerifying(false);
@@ -63,7 +63,7 @@ const Login = ({ closeCallback }: { closeCallback: () => void }) => {
   const onLoginClick = useCallback(() => {
     if (value) {
       setIsLoading(true);
-      apiClient
+      apiClient("")
         .post("http://localhost:3000/api/v1/send_auth_code", {
           phone_number: value,
         })

@@ -11,5 +11,6 @@ export const useUser = () => {
 
   return {
     userId: accessTokenData?.user_id,
+    token,
   };
 };

@@ -1,7 +1,8 @@
 "use client";
 
+import { useCreateEvent } from "@/hooks/useCreateEvent";
 import useDebounce from "@/hooks/useDebounce";
-import { useEventStore } from "@/store/eventStore";
+import { useUser } from "@/hooks/useUser";
 import { GiphyFetch } from "@giphy/js-fetch-api";
 import * as Form from "@radix-ui/react-form";
 import Image from "next/image";
@@ -24,6 +25,9 @@ const EventForm = () => {
 
   const debouncedSearch = useDebounce(eventName, 1000);
 
+  const { mutate, isLoading, isError } = useCreateEvent();
+  const { token } = useUser();
+
   useEffect(() => {
     const randomNum = Math.floor(Math.random() * 11);
     // future use these images and allow user to select
@@ -35,22 +39,25 @@ const EventForm = () => {
 
   const onFormSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const localEvents = localStorage.getItem("savedEvents");
     const payload = {
-      name: eventName,
+      title: eventName,
       description: eventDescription,
-      location: eventLocation,
-      availableTimes: proposedTimes,
-      img: gif,
+      expires_on: "2025-01-01",
+      // location: eventLocation,
+      event_availabilities: proposedTimes,
+      // img: gif,
     };
-    const savedEvents = localEvents ? JSON.parse(localEvents) : [];
-    const id = savedEvents.length + 1;
-    savedEvents.push({ ...payload, id });
-    localStorage.setItem("savedEvents", JSON.stringify(savedEvents));
-    router.push(`/events/${id}`);
+    mutate(
+      { eventData: payload, token },
+      {
+        onSuccess: (data) => {
+          console.log("data here", data);
+          const id = data?.event?.data?.attributes?.code;
+          id && router.push(`/events/${id}`);
+        },
+      },
+    );
   };
-
-  const eventStore = useEventStore();
 
   return (
     <Form.Root
@@ -87,6 +94,17 @@ const EventForm = () => {
             labelText="Location"
             value={eventLocation}
             onInputChange={(e) => setEventLocation(e.target.value)}
+          />
+        </Form.Control>
+      </Form.Field>
+      <Form.Field name="event-expiration">
+        <Form.Control asChild>
+          <Input
+            id="event-expiration"
+            inputType="text"
+            labelText="Expires on"
+            // value={eventLocation}
+            // onInputChange={(e) => setEventLocation(e.target.value)}
           />
         </Form.Control>
       </Form.Field>
