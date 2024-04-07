@@ -1,6 +1,5 @@
 "use client";
 
-import EventList from "@/components/features/EventList";
 import Header from "@/components/shared/Header";
 import NoSSR from "@/components/shared/NoSSR";
 import { Button } from "@/components/ui/button";
@@ -37,11 +36,6 @@ export default function Home() {
                 : "Create an event"}
             </Button>
           </Link>
-          <EventList
-            hostEvents={upcomingHostedEvents}
-            participatingEvents={upcomingParticipatingEvents}
-            pastEvents={pastEvents}
-          />
         </div>
       );
     }
