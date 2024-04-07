@@ -22,8 +22,6 @@ const Login = ({ closeCallback }: { closeCallback?: () => void }) => {
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [loginSuccess, setLoginSuccess] = useState<boolean>(false);
-  const [showOverride, setShowOverride] = useState(false);
-
   const setToken = useAuthStore((state) => state.setToken);
 
   useEffect(() => {
@@ -74,7 +72,6 @@ const Login = ({ closeCallback }: { closeCallback?: () => void }) => {
           setLoginSuccess(true);
         })
         .catch((error) => {
-          setShowOverride(true);
           console.log("end auth code response error: ", error);
         });
     }
@@ -116,10 +113,9 @@ const Login = ({ closeCallback }: { closeCallback?: () => void }) => {
         <div className={cn("text-xs", { invisible: !isValid })}>
           We will send a verification code to this number.
         </div>
-        {loginSuccess || showOverride ? (
+        {loginSuccess ? (
           <div className="flex flex-col items-center">
             <span>Verification Code</span>
-            {showOverride && <span>(backdoor login method)</span>}
             <div className="flex items-center relative">
               <Input
                 onInputChange={(e) => setVerificationCode(e.target.value)}
