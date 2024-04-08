@@ -8,23 +8,10 @@ import "./globals.css";
 
 export const metadata: Metadata = {
   openGraph: {
-    title: "CorgiCal",
-    description: "CorgiCal events",
-    url: "https://nextjs.org",
-    siteName: "",
-    images: [
-      {
-        url: "https://media0.giphy.com/media/v1.Y2lkPTc5MGI3NjExbnNxZTVja3I4ZGE2cHQydHkzamR3bDJ3YWhmaDB1eDBncXc2Zm9maCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/geDdVatJFD2H4CkqAj/giphy.gif",
-        width: 800,
-        height: 600,
-      },
-      {
-        url: "https://media0.giphy.com/media/v1.Y2lkPTc5MGI3NjExbnNxZTVja3I4ZGE2cHQydHkzamR3bDJ3YWhmaDB1eDBncXc2Zm9maCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/geDdVatJFD2H4CkqAj/giphy.gif",
-        width: 1800,
-        height: 1600,
-        alt: "My custom alt",
-      },
-    ],
+    title: "Wilson Park Ceramics",
+    description: "Wilson Park Ceramics reservations",
+    url: "https://www.wilsonparkceramics.com/g",
+    siteName: "Wilson Park Ceramics reservations",
     locale: "en_US",
     type: "website",
   },
@@ -40,11 +27,12 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
+  console.log("stuf happen");
   return (
     <html lang="en">
       <body
         className={cn(
-          "min-h-screen bg-background font-sans antialiased flex-col flex",
+          "min-h-screen font-sans antialiased flex-col flex",
           fontSans.variable,
         )}
       >
@@ -54,9 +42,6 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          {/* <div className="fixed top-2 right-2">
-            <ModeToggle />
-          </div> */}
           <ApiProvider>{children}</ApiProvider>
         </ThemeProvider>
       </body>

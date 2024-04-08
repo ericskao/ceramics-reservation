@@ -1,16 +1,14 @@
-import { useAuthStore } from "@/store/auth-store";
-import { jwtDecode } from "jwt-decode";
+import { getAuth } from "firebase/auth";
+import { useState } from "react";
 
 export const useUser = () => {
-  const token = useAuthStore((state) => state.token);
-  const accessTokenData = token
-    ? (jwtDecode(token) as { user_id: string })
-    : undefined;
+  const [user, setUser] = useState<any>(null);
 
-  // console.log("data in useuser", data, x);
+  const auth = getAuth();
+
+  console.log("auth", auth.currentUser);
 
   return {
-    userId: accessTokenData?.user_id,
-    token,
+    user: auth?.currentUser,
   };
 };

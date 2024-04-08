@@ -2,7 +2,7 @@
 
 import { cn } from "@/lib/utils";
 import * as RadixLabel from "@radix-ui/react-label";
-import { ChangeEventHandler, KeyboardEventHandler } from "react";
+import { ChangeEventHandler, KeyboardEventHandler, useRef } from "react";
 
 const Input = ({
   id,
@@ -32,6 +32,8 @@ const Input = ({
   onKeyDown?: KeyboardEventHandler<HTMLInputElement>;
   onInputChange?: ChangeEventHandler<HTMLInputElement | HTMLTextAreaElement>;
 }) => {
+  const inputRef = useRef<HTMLInputElement | null>(null);
+
   return (
     <div
       className={cn(
@@ -41,6 +43,7 @@ const Input = ({
     >
       {(inputType === "text" || inputType === "number") && (
         <input
+          ref={inputRef}
           maxLength={maxLength}
           className={cn("outline-none peer", className?.input)}
           id={id}
@@ -63,10 +66,15 @@ const Input = ({
       )}
       <RadixLabel.Root
         className={cn(
-          "text-secondary-text leading-4 translate-y-3 peer-focus:scale-75 peer-focus:translate-y-0.5  origin-top-left transition-all",
+          "text-secondary-text leading-3 translate-y-3 peer-focus:scale-75 peer-focus:translate-y-0.5  origin-top-left transition-all cursor-text",
           { "scale-75 translate-y-0.5": value !== "" },
         )}
         htmlFor={id}
+        onClick={() => {
+          if (inputRef.current) {
+            inputRef.current.focus();
+          }
+        }}
       >
         {labelText}
       </RadixLabel.Root>

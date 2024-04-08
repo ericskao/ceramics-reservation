@@ -1695,6 +1695,11 @@ detect-node@^2.0.4, detect-node@^2.1.0:
   resolved "https://registry.npmjs.org/detect-node/-/detect-node-2.1.0.tgz"
   integrity sha512-T0NIuQpnTvFDATNuHN5roPwSBG83rFsuO+MXXH9/3N1eFbn4wcPjttvjMLEPWJ0RGUYgQE7cGgS3tNxbqCGM7g==
 
+dialog-polyfill@^0.4.7:
+  version "0.4.10"
+  resolved "https://registry.npmjs.org/dialog-polyfill/-/dialog-polyfill-0.4.10.tgz"
+  integrity sha512-j5yGMkP8T00UFgyO+78OxiN5vC5dzRQF3BEio+LhNvDbyfxWBsi3sfPArDm54VloaJwy2hm3erEiDWqHRC8rzw==
+
 didyoumean@^1.2.2:
   version "1.2.2"
   resolved "https://registry.npmjs.org/didyoumean/-/didyoumean-1.2.2.tgz"
@@ -1730,6 +1735,11 @@ dompurify@^2.2.2:
   version "2.4.7"
   resolved "https://registry.npmjs.org/dompurify/-/dompurify-2.4.7.tgz"
   integrity sha512-kxxKlPEDa6Nc5WJi+qRgPbOAbgTpSULL+vI3NUXsZMlkJxTqYI9wg5ZTay2sFrdZRWHPWNi+EdAhcJf81WtoMQ==
+
+dotenv@^16.4.5:
+  version "16.4.5"
+  resolved "https://registry.npmjs.org/dotenv/-/dotenv-16.4.5.tgz"
+  integrity sha512-ZmdL2rui+eB2YwhsWzjInR8LldtZHGDoQ1ugH85ppHKwpUHL7j7rN0Ti9NCnGiQbhaZ11FpR+7ao1dNsmduNUg==
 
 eastasianwidth@^0.2.0:
   version "0.2.0"
@@ -2154,7 +2164,7 @@ find-up@^5.0.0:
     locate-path "^6.0.0"
     path-exists "^4.0.0"
 
-firebase@^10.10.0:
+firebase@^10.10.0, "firebase@^9.1.3 || ^10.0.0":
   version "10.10.0"
   resolved "https://registry.npmjs.org/firebase/-/firebase-10.10.0.tgz"
   integrity sha512-iJxnCKsBTYa4BSv8cscNbwciX42BvwoePTHg7iwWevb+GyVcZFmKi9eSkg/L7Jpu9mvAFv1jdDGbIaG3xRrE+w==
@@ -2185,6 +2195,14 @@ firebase@^10.10.0:
     "@firebase/storage" "0.12.3"
     "@firebase/storage-compat" "0.3.6"
     "@firebase/util" "1.9.5"
+
+firebaseui@^6.1.0:
+  version "6.1.0"
+  resolved "https://registry.npmjs.org/firebaseui/-/firebaseui-6.1.0.tgz"
+  integrity sha512-5WiVYVxPGMANuZKxg6KLyU1tyqIsbqf/59Zm4HrdFYwPtM5lxxB0THvgaIk4ix+hCgF0qmY89sKiktcifKzGIA==
+  dependencies:
+    dialog-polyfill "^0.4.7"
+    material-design-lite "^1.2.0"
 
 flat-cache@^3.0.4:
   version "3.2.0"
@@ -2902,6 +2920,11 @@ match-sorter@^6.0.2:
   dependencies:
     "@babel/runtime" "^7.23.8"
     remove-accents "0.5.0"
+
+material-design-lite@^1.2.0:
+  version "1.3.0"
+  resolved "https://registry.npmjs.org/material-design-lite/-/material-design-lite-1.3.0.tgz"
+  integrity sha512-ao76b0bqSTKcEMt7Pui+J/S3eVF0b3GWfuKUwfe2lP5DKlLZOwBq37e0/bXEzxrw7/SuHAuYAdoCwY6mAYhrsg==
 
 mdn-data@2.0.14:
   version "2.0.14"
