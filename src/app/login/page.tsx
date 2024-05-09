@@ -1,6 +1,5 @@
 "use client";
 
-import StyledFirebaseAuth from "@/firebase/StyledFirebaseAuth";
 // Import FirebaseAuth and firebase.
 import firebase from "firebase/compat/app";
 import "firebase/compat/auth";
@@ -43,10 +42,10 @@ function SignInScreen() {
       <div>
         <h1>My App</h1>
         <p>Please sign-in:</p>
-        <StyledFirebaseAuth
+        {/* <StyledFirebaseAuth
           uiConfig={uiConfig}
           firebaseAuth={firebase.auth()}
-        />
+        /> */}
       </div>
     );
   }

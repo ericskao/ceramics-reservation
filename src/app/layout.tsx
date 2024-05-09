@@ -1,10 +1,16 @@
 import { ApiProvider } from "@/components/ApiProvider";
 import { ThemeProvider } from "@/components/theme-provider";
 import { cn } from "@/lib/utils";
+import { ColorSchemeScript, createTheme, MantineProvider } from "@mantine/core";
 import { Metadata } from "next";
 import { Inter as FontSans } from "next/font/google";
 
+import "@mantine/core/styles.css";
 import "./globals.css";
+
+const theme = createTheme({
+  /** Put your mantine theme override here */
+});
 
 export const metadata: Metadata = {
   openGraph: {
@@ -27,9 +33,11 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  console.log("stuf happen");
   return (
     <html lang="en">
+      <head>
+        <ColorSchemeScript defaultColorScheme="auto" />
+      </head>
       <body
         className={cn(
           "min-h-screen font-sans antialiased flex-col flex",
@@ -42,7 +50,9 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <ApiProvider>{children}</ApiProvider>
+          <MantineProvider>
+            <ApiProvider>{children}</ApiProvider>
+          </MantineProvider>
         </ThemeProvider>
       </body>
     </html>

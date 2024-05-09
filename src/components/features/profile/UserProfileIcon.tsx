@@ -1,8 +1,8 @@
 "use client";
 
-import Avatar from "@/components/ui/avatar";
 import { useUser } from "@/hooks/useUser";
 import { useAuthStore } from "@/store/auth-store";
+import { Avatar } from "@mantine/core";
 import "firebase/compat/auth";
 import { useState } from "react";
 
