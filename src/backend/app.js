@@ -20,19 +20,99 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 
-// app.get("/", function (req, res, next) {
-//   res.send([{ name: "habit1" }]);
-// });
+app.get("/reservations", async (req, res) => {
+  // return this week and next two week's reservations
+  // if reservations of this time span does not exist, then populate them
 
-app.get("/hi", async (req, res) => {
   try {
     // Execute a simple query to test the database connection
-    // const result = await pool.query("SELECT * FROM users");
-    res.json({ success: true });
+    const result = await pool.query("SELECT * FROM reservations");
+    res.json({ reservations: result.rows || [] });
   } catch (error) {
     console.error("Error testing database connection:", error);
     res.status(500).json({ success: false, error: "Internal server error" });
   }
+});
+
+app.post("/reservations/:id", async (req, res) => {
+  const wheelId = req.params.id;
+  const userId = req.body.userId;
+  const result = await pool.query(
+    `
+WITH existing_reservations AS (
+    SELECT DISTINCT user_id
+    FROM reservations
+    WHERE reservations.date = (
+      SELECT reservations.date
+      FROM reservations
+      WHERE id = $1
+    )
+  )
+  SELECT
+    CASE
+      WHEN EXISTS (
+        SELECT 1
+        FROM existing_reservations
+        WHERE user_id = $2
+      ) THEN true
+      ELSE false
+    END AS has_existing_reservation,
+    (SELECT user_id FROM reservations WHERE id = $1) IS NOT NULL AS reservation_has_user_id;
+   `,
+    [wheelId, userId],
+  );
+  if (
+    result.rows[0].has_existing_reservation ||
+    result.rows[0].reservation_has_user_id
+  ) {
+    res.status(409).json({
+      success: false,
+      error:
+        "Internal conflict error. Wheel is already reserved or User already has reservation for same day.",
+    });
+  } else {
+    const response = await pool.query(
+      `UPDATE reservations SET user_id = $1 WHERE id = $2;`,
+      [userId, wheelId],
+    );
+    res.status(200).json(response.rows[0]);
+  }
+});
+
+app.put(`/reservations/:id`, async (req, res) => {
+  const wheelId = req.params.id;
+  const userId = req.body.userId;
+  const result = await pool.query(
+    `
+    UPDATE reservations SET user_id = $1 WHERE id = $2;
+    `,
+    [userId, wheelId],
+  );
+  res.status(200).json(result.rows[0]);
+});
+
+app.get("/users/:id", async (req, res) => {
+  const id = req.params.id;
+  const result = await pool.query(
+    `
+    SELECT * FROM users WHERE id = $1;
+  `,
+    [id],
+  );
+  res.status(200).json(result.rows[0]);
+});
+
+app.post("/users", async (req, res) => {
+  const user = req.body.user;
+  const { uid, email, displayName } = req.body.user;
+  const result = await pool.query(
+    `
+      INSERT INTO users (id, name, email)
+      VALUES ($1, $2, $3)
+    `,
+    [uid, displayName, email],
+  );
+  res.status(201).json(result.rows[0]);
 });
 
 // app.use("/", indexRouter);

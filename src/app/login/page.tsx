@@ -1,14 +1,19 @@
 "use client";
 
+import StyledFirebaseAuth from "@/firebase/StyledFirebaseAuth";
 // Import FirebaseAuth and firebase.
+import { firebaseConfig } from "@/firebase/config";
 import firebase from "firebase/compat/app";
 import "firebase/compat/auth";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import { useCheckAndInsertUser } from "../api/queries/checkAndAddUser";
 
 function SignInScreen() {
   const [isSignedIn, setIsSignedIn] = useState(false); // Local signed-in state.
   const router = useRouter();
+  firebase.initializeApp(firebaseConfig);
+  const { checkUser, insertUser } = useCheckAndInsertUser();
 
   // Listen to the Firebase Auth state and set the local state.
   useEffect(() => {
@@ -29,8 +34,15 @@ function SignInScreen() {
       firebase.auth.EmailAuthProvider.PROVIDER_ID,
     ],
     callbacks: {
-      // Avoid redirects after sign-in.
-      signInSuccessWithAuthResult: (user: any) => {
+      signInSuccessWithAuthResult: (res: any) => {
+        const user = res.user;
+        checkUser(user.uid).then((data) => {
+          console.log("data", data);
+          if (!data) {
+            // insert user
+            insertUser(user);
+          }
+        });
         router.push("/");
         return true;
       },
@@ -42,10 +54,10 @@ function SignInScreen() {
       <div>
         <h1>My App</h1>
         <p>Please sign-in:</p>
-        {/* <StyledFirebaseAuth
+        <StyledFirebaseAuth
           uiConfig={uiConfig}
           firebaseAuth={firebase.auth()}
-        /> */}
+        />
       </div>
     );
   }
