@@ -1,13 +1,16 @@
 CREATE TABLE users(
-  id serial PRIMARY KEY,
+  id varchar(40) PRIMARY KEY,
   name varchar(40),
-  email varchar(40)
+  email varchar(40),
+  is_verified boolean DEFAULT FALSE NOT NULL,
+  is_admin boolean DEFAULT FALSE NOT NULL
 );
 
 CREATE TABLE reservations(
   id serial PRIMARY KEY,
-  user_id int REFERENCES users(id),
+  user_id varchar(40) REFERENCES users(id),
   date date,
-  time_slot varchar(20)
+  starting_time int,
+  wheel_number int
 );
 
