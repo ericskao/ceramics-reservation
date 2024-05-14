@@ -72,9 +72,13 @@ WITH existing_reservations AS (
     });
   } else {
     const response = await pool.query(
-      `UPDATE reservations SET user_id = $1 WHERE id = $2;`,
+      `
+        UPDATE reservations SET user_id = $1 WHERE id = $2
+        RETURNING *;
+      `,
       [userId, wheelId],
     );
+    console.log(response);
     res.status(200).json(response.rows[0]);
   }
 });
@@ -84,7 +88,7 @@ app.put(`/reservations/:id`, async (req, res) => {
   const userId = req.body.userId;
   const result = await pool.query(
     `
-    UPDATE reservations SET user_id = $1 WHERE id = $2;
+    UPDATE reservations SET user_id = $1 WHERE id = $2 RETURNING *;
     `,
     [userId, wheelId],
   );

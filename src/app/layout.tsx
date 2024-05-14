@@ -2,10 +2,12 @@ import { ApiProvider } from "@/components/ApiProvider";
 import { ThemeProvider } from "@/components/theme-provider";
 import { cn } from "@/lib/utils";
 import { ColorSchemeScript, createTheme, MantineProvider } from "@mantine/core";
+import { Notifications } from "@mantine/notifications";
 import { Metadata } from "next";
 import { Inter as FontSans } from "next/font/google";
 
 import "@mantine/core/styles.css";
+import "@mantine/notifications/styles.css";
 import "./globals.css";
 
 const theme = createTheme({
@@ -52,6 +54,7 @@ export default function RootLayout({
         >
           <MantineProvider>
             <ApiProvider>{children}</ApiProvider>
+            <Notifications />
           </MantineProvider>
         </ThemeProvider>
       </body>

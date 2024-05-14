@@ -16,9 +16,7 @@ const WheelReservation = ({
   };
 
   const onRemoveReservation = () => {
-    removeReservationMutation({ wheelId: reservation.id }).then((data) => {
-      console.log(data);
-    });
+    removeReservationMutation({ wheelId: reservation.id });
   };
 
   console.log("reservaionn", reservation, user);
@@ -36,7 +34,9 @@ const WheelReservation = ({
       ) : (
         <button
           className="border border-black"
-          onClick={() => reservation.id && onReserveClick(reservation.id)}
+          onClick={() => {
+            reservation.id && onReserveClick(reservation.id);
+          }}
         >
           Reserve this wheel
         </button>
