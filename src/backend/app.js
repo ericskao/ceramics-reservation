@@ -21,6 +21,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 
 app.get("/reservations", async (req, res) => {
+  // TODO
   // return this week and next two week's reservations
   // if reservations of this time span does not exist, then populate them
 
@@ -35,51 +36,59 @@ app.get("/reservations", async (req, res) => {
 });
 
 app.post("/reservations/:id", async (req, res) => {
-  const wheelId = req.params.id;
-  const userId = req.body.userId;
-  const result = await pool.query(
-    `
-WITH existing_reservations AS (
-    SELECT DISTINCT user_id
-    FROM reservations
-    WHERE reservations.date = (
-      SELECT reservations.date
+  try {
+    const wheelId = req.params.id;
+    const userId = req.body.userId;
+    const result = await pool.query(
+      `
+    WITH target_reservation AS (
+      SELECT date, starting_time
       FROM reservations
       WHERE id = $1
+    ),
+    existing_reservations AS (
+      SELECT DISTINCT user_id
+      FROM reservations
+      JOIN target_reservation
+        ON reservations.date = target_reservation.date
+        AND reservations.starting_time = target_reservation.starting_time
     )
-  )
-  SELECT
-    CASE
-      WHEN EXISTS (
-        SELECT 1
-        FROM existing_reservations
-        WHERE user_id = $2
-      ) THEN true
-      ELSE false
-    END AS has_existing_reservation,
-    (SELECT user_id FROM reservations WHERE id = $1) IS NOT NULL AS reservation_has_user_id;
-   `,
-    [wheelId, userId],
-  );
-  if (
-    result.rows[0].has_existing_reservation ||
-    result.rows[0].reservation_has_user_id
-  ) {
-    res.status(409).json({
-      success: false,
-      error:
-        "Internal conflict error. Wheel is already reserved or User already has reservation for same day.",
-    });
-  } else {
-    const response = await pool.query(
-      `
+    SELECT
+      CASE
+        WHEN EXISTS (
+          SELECT 1
+          FROM existing_reservations
+          WHERE user_id = $2
+        ) THEN true
+        ELSE false
+      END AS has_existing_reservation,
+      (SELECT user_id FROM reservations WHERE id = $1) IS NOT NULL AS reservation_has_user_id;
+    `,
+      [wheelId, userId],
+    );
+    if (
+      result.rows[0].has_existing_reservation ||
+      result.rows[0].reservation_has_user_id
+    ) {
+      res.status(409).json({
+        success: false,
+        error:
+          "Internal conflict error. Wheel is already reserved or User already has reservation for same day.",
+      });
+    } else {
+      const response = await pool.query(
+        `
         UPDATE reservations SET user_id = $1 WHERE id = $2
         RETURNING *;
       `,
-      [userId, wheelId],
-    );
-    console.log(response);
-    res.status(200).json(response.rows[0]);
+        [userId, wheelId],
+      );
+      console.log(response);
+      res.status(200).json(response.rows[0]);
+    }
+  } catch (error) {
+    console.error("Error testing database connection:", error);
+    res.status(500).json({ success: false, error: "Internal server error" });
   }
 });
 
