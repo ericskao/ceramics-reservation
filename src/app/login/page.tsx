@@ -10,9 +10,11 @@ import { useEffect, useState } from "react";
 import { useCheckAndInsertUser } from "../api/queries/checkAndAddUser";
 
 function SignInScreen() {
-  const [isSignedIn, setIsSignedIn] = useState(false); // Local signed-in state.
-  const router = useRouter();
   firebase.initializeApp(firebaseConfig);
+
+  const [isSignedIn, setIsSignedIn] = useState(false); // Local signed-in state.
+  // const { user } = useUser();
+  const router = useRouter();
   const { checkUser, insertUser } = useCheckAndInsertUser();
 
   // Listen to the Firebase Auth state and set the local state.
@@ -37,7 +39,6 @@ function SignInScreen() {
       signInSuccessWithAuthResult: (res: any) => {
         const user = res.user;
         checkUser(user.uid).then((data) => {
-          console.log("data", data);
           if (!data) {
             // insert user
             insertUser(user);

@@ -11,8 +11,6 @@ const UserProfileIcon = () => {
   const { user } = useUser();
   const clearToken = useAuthStore((state) => state.clearToken);
 
-  console.log("user", user);
-
   const closeDialog = () => {
     setDialogOpen(false);
   };

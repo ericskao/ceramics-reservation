@@ -7,8 +7,8 @@ const WheelReservation = ({
 }: {
   reservation: ReservationType;
 }) => {
-  const { user } = useUser();
   const { reserveWheelMutation, removeReservationMutation } = useReserveWheel();
+  const { user } = useUser();
 
   const onReserveClick = (wheelId: number) => {
     if (!user) return;
@@ -18,8 +18,6 @@ const WheelReservation = ({
   const onRemoveReservation = () => {
     removeReservationMutation({ wheelId: reservation.id });
   };
-
-  console.log("reservaionn", reservation, user);
 
   return (
     <div className="basis-1/2">

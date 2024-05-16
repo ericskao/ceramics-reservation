@@ -2,24 +2,24 @@ import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
 type AuthStore = {
-  token: string;
+  user: any | null;
 };
 
 type Actions = {
-  setToken: (token: string) => void;
-  clearToken: () => void;
+  setUser: (user: any | null) => void;
+  clearUser: () => void;
 };
 
 export const useAuthStore = create<AuthStore & Actions>()(
   persist(
     (set) => ({
-      token: "",
-      setToken: (token) => set((state) => ({ token })),
-      clearToken: () =>
+      user: null,
+      setUser: (user) => set((state) => ({ user })),
+      clearUser: () =>
         set((state) => ({
-          token: undefined,
+          user: null,
         })),
     }),
-    { name: "global" },
+    { name: "auth-store" },
   ),
 );

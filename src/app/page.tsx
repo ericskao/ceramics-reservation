@@ -4,20 +4,18 @@ import DailyReservationList from "@/components/features/reservation/DailyReserva
 import Waitlist from "@/components/features/reservation/Waitlist";
 import Header from "@/components/shared/Header";
 import NoSSR from "@/components/shared/NoSSR";
+import { firebaseAuth } from "@/firebase/initFirebase";
 import { useReservations } from "@/hooks/useReservations";
-import { useUser } from "@/hooks/useUser";
 import { ArrowLeftIcon, ArrowRightIcon } from "lucide-react";
 import { useState } from "react";
 
 const sampleWaitlist = ["Patrick", "Sue", "Kim", "Eric"];
 
 export default function Home() {
+  console.log("firebase auth in home", firebaseAuth);
   const [weekPagination, setWeekPagination] = useState<number>(0);
 
-  const { user } = useUser();
   const { fridayReservations, saturdayReservations } = useReservations();
-
-  console.log("friday", fridayReservations);
 
   return (
     <div className="flex min-h-screen flex-col items-center gap-y-3">

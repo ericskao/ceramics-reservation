@@ -35,6 +35,7 @@ const StyledFirebaseAuth = ({
   }, []);
 
   useEffect(() => {
+    console.log("in useeffect styled");
     if (firebaseui === null) return;
 
     // Get or Create a firebaseUI instance.

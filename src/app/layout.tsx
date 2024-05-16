@@ -53,7 +53,10 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           <MantineProvider>
-            <ApiProvider>{children}</ApiProvider>
+            <ApiProvider>
+              {/* <FirebaseWrapper></FirebaseWrapper> */}
+              {children}
+            </ApiProvider>
             <Notifications />
           </MantineProvider>
         </ThemeProvider>
